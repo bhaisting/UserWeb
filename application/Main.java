@@ -12,7 +12,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-	public static final int WINDOW_WIDTH = 900;
+	public static final int WINDOW_WIDTH = 800;
 	public static final int WINDOW_HEIGHT = 600; // NOTE: AS OF THE CURRENT STAGE
 																								// OF DEVELOPMENT, MANY THINGS
 																								// MAY NEED TO CHANGE IF
