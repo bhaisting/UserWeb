@@ -15,6 +15,9 @@ public class Main extends Application {
 	private static final int WINDOW_HEIGHT = 800;
 	private static final String APP_TITLE = "UserWeb";
 	public static boolean perspective = false;
+	private static UserNetwork userNetwork = new UserNetwork();
+	private static GeneralDisplay generalDisplay = new GeneralDisplay(userNetwork);
+	private static PerspectiveDisplay perspectiveDisplay = new PerspectiveDisplay(userNetwork);
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -22,11 +25,11 @@ public class Main extends Application {
 		root.setCenter(new VBox());
 		root.setTop(new Label("Hi"));
 		Scene display = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
-		if(perspective) {
-			
+		/*if(perspective) {
+			display = 
 		}else {
 			
-		}
+		}*/
 		primaryStage.setTitle(APP_TITLE);
 		primaryStage.setScene(display);
 		primaryStage.show();
