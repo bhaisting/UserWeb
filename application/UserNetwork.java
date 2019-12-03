@@ -13,40 +13,67 @@ public UserNetwork() {
 
 @Override
 public void setFriend(String username, String username2) {
-	// TODO Auto-generated method stub
-	
+	UserNode name1 = null;
+	UserNode name2 = null;
+	for(UserNode i :  this.userList) {
+		if(i.getUsername().equals(username)) {
+			name1 = i;
+		}
+		if(i.getUsername().equals(username2)) {
+			name2 = i;
+		}
+	}
+	if(name1 == null) {
+		name1 = new UserNode(username);
+		this.userList.add(name1);
+	}
+	if(name2 == null) {
+		name2 = new UserNode(username2);
+		this.userList.add(name2);
+	}
+	name1.addFriend(name2);
+	name2.addFriend(name1);
 }
 
 @Override
 public void deleteFriend(String username, String username2) {
-	// TODO Auto-generated method stub
-	
+	UserNode name1 = null;
+	UserNode name2 = null;
+	for(UserNode i :  this.userList) {
+		if(i.getUsername().equals(username)) {
+			name1 = i;
+		}
+		if(i.getUsername().equals(username2)) {
+			name2 = i;
+		}
+	}
+	if(name1 == null || name2 == null) {
+		return;
+	}
+	name1.removeFriend(name2);
+	name2.removeFriend(name1);
 }
 
 @Override
-public void createUser(String username) {					//Might want to add boolean flag to show if user already created
-	boolean alreadyPresent = false;
-	for(int i = 0; i < this.userList.size(); i++) {
-		if(this.userList.get(i).getUsername().equals(username)) {
-			alreadyPresent = true;
+public void createUser(String username) {
+//	boolean alreadyPresent = false;
+	UserNode newUser = new UserNode(username);
+	for(UserNode i : this.userList) {
+		if(i.getUsername().equals(username)) {
 			return;
 		}
 	}
-	UserNode newUser = new UserNode(username);
 	this.userList.add(newUser);
 	return;
 }
 
 @Override
-public void deleteUser(String username) {					//Same as above
-	boolean notPresent = false;
-	for(int i = 0; i < this.userList.size(); i++) {
-		if(this.userList.get(i).getUsername().equals(username)) {
+public void deleteUser(String username) {
+	for(UserNode i : this.userList) {
+		if(i.getUsername().equals(username)) {
 			this.userList.remove(i);
-			return;
 		}
 	}
-	notPresent = true;
 	return;
 }
 
@@ -57,9 +84,10 @@ public LinkedList<UserNode> getUserList() {
 
 @Override
 public UserNode getUser(String username) {
-	for(int i = 0; i < this.userList.size(); i++) {
-		if(this.userList.get(i).getUsername().equals(username)) {
-			return this.userList.get(i);
+	UserNode toGet = null;
+	for(UserNode i : this.userList) {
+		if(i.getUsername().equals(username)) {
+			return i;
 		}
 	}
 	return null;
