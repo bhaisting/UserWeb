@@ -3,6 +3,8 @@ package application;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
@@ -52,13 +54,15 @@ public class GeneralDisplay {
 		remove_user.relocate(650,530);
 		remove_user.setPrefSize(100,50);
 		root.getChildren().add(remove_user);
-		
+		ScrollPane allUsers = new ScrollPane();
 		buttonHandler(root);
 		return root;
 	}
 	
 	public void buttonHandler(Pane root) {
 		add_user.setOnAction(event -> {
+			TextField name = new TextField("Input name");
+			root.getChildren().add(name);
 			System.out.println("Success!");
 		});
 		add_friend.setOnAction(event -> {
