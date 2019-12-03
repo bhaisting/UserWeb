@@ -2,6 +2,7 @@ package application;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 
 public class PerspectiveDisplay {
@@ -11,7 +12,7 @@ public class PerspectiveDisplay {
 		network = net;
 	}
 	
-	public Screen getPerspectiveScreen() {
+	public Pane getPerspectiveScreen() {
 		return null;
 	}
 }
