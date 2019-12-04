@@ -4,11 +4,10 @@ a drew
 a sam rob
 r dan sam
 a drew dan
-r sam rob
 a mike bob
 a bob mark
 r drew dan
 a dave bob
 r bob mark
 r drew rob
-s rob
+s bob

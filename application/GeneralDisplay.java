@@ -68,6 +68,9 @@ public class GeneralDisplay {
 		allUsers.setPrefSize(110, 500);
 
 		VBox users = new VBox();
+		Label userLabel = new Label("All Users");
+		userLabel.setFont(new Font("Arial",14));
+		users.getChildren().add(userLabel);
 		for (UserNode node : network.getUserList()) {
 			users.getChildren().add(new Label(node.getUsername()));
 		}

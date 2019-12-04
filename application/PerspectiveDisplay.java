@@ -69,7 +69,11 @@ public class PerspectiveDisplay {
 		
 		ScrollPane allUsers = new ScrollPane();
 		allUsers.setPrefSize(110, 500);
+		
 		VBox users = new VBox();
+		Label userLabel = new Label("All Users");
+		userLabel.setFont(new Font("Arial",14));
+		users.getChildren().add(userLabel);
 		for (UserNode node : network.getUserList()) {
 			users.getChildren().add(new Label(node.getUsername()));
 		}
@@ -83,6 +87,9 @@ public class PerspectiveDisplay {
 		allFriends.relocate(690,0);
 
 		VBox friends = new VBox();
+		Label friendLabel = new Label("Friends");
+		friendLabel.setFont(new Font("Arial",14));
+		friends.getChildren().add(friendLabel);
 		for (UserNode node : Main.perspectivePerson.getFriendList()) {
 			friends.getChildren().add(new Label(node.getUsername()));
 		}
