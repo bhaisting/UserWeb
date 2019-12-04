@@ -40,7 +40,20 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		launch(args);
+		userNetwork.createUser("Jimbo");
+		userNetwork.createUser("Jimbo");
+		userNetwork.createUser("Jorge");
+		userNetwork.setFriend("Jimbo","Stevie");
+		userNetwork.setFriend("Jorge","Jimbo");
+		userNetwork.deleteFriend("Jorge","Stevie");
+		userNetwork.deleteFriend("Stevie","Jimbo");
+		for (UserNode i : userNetwork.getUserList()) {
+			System.out.println(i.getUsername());
+			for (UserNode j : i.getFriendList()) {
+				System.out.println("\t"+j.getUsername());
+			}
+		}
+		// launch(args);
 	}
 
 }
