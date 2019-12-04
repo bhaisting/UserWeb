@@ -7,4 +7,3 @@ a bob mark
 a dave bob
 r bob mark
 r drew rob
-s mark

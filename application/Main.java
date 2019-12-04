@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -17,10 +18,9 @@ public class Main extends Application {
 	private static final String APP_TITLE = "UserWeb";
 	public static boolean perspective = false;
 	public static UserNode perspectivePerson = new UserNode("");
-	private static UserNetwork userNetwork = new UserNetwork();
-	private static GeneralDisplay generalDisplay = new GeneralDisplay(
-			userNetwork);
-	private static PerspectiveDisplay perspectiveDisplay = new PerspectiveDisplay(
+	public static UserNetwork userNetwork = new UserNetwork();
+	public static GeneralDisplay generalDisplay = new GeneralDisplay(userNetwork);
+	public static PerspectiveDisplay perspectiveDisplay = new PerspectiveDisplay(
 			userNetwork);
 	public static ExternalInteractor externalInteractor = new ExternalInteractor(
 			userNetwork);
@@ -40,20 +40,21 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
+		// Some hardcoded tests of functionality 
+		//NOTE: Perspective display is available, but it's less developed
 		userNetwork.createUser("Jimbo");
 		userNetwork.createUser("Jimbo");
 		userNetwork.createUser("Jorge");
-		userNetwork.setFriend("Jimbo","Stevie");
-		userNetwork.setFriend("Jorge","Jimbo");
-		userNetwork.deleteFriend("Jorge","Stevie");
-		userNetwork.deleteFriend("Stevie","Jimbo");
-		for (UserNode i : userNetwork.getUserList()) {
-			System.out.println(i.getUsername());
-			for (UserNode j : i.getFriendList()) {
-				System.out.println("\t"+j.getUsername());
-			}
+		userNetwork.setFriend("Jimbo", "Stevie");
+		userNetwork.setFriend("Jorge", "Jimbo");
+		userNetwork.deleteFriend("Jorge", "Stevie");
+		userNetwork.deleteFriend("Stevie", "Jimbo");
+		try {
+			externalInteractor.load("datafiles/example2.txt");
+		} catch (Exception e) {
+			System.out.println("An error was thrown while loading a file");
 		}
-		// launch(args);
+		launch(args);
 	}
 
 }
