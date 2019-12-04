@@ -13,16 +13,16 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	public static final int WINDOW_WIDTH = 800;
-	public static final int WINDOW_HEIGHT = 600; // NOTE: AS OF THE CURRENT STAGE
-																								// OF DEVELOPMENT, MANY THINGS
-																								// MAY NEED TO CHANGE IF
-																								// DIMENSIONS CHANGE
+	public static final int WINDOW_HEIGHT = 600;
 	private static final String APP_TITLE = "UserWeb";
 	public static boolean perspective = false;
+	public static UserNode perspectivePerson = new UserNode("");
 	private static UserNetwork userNetwork = new UserNetwork();
 	private static GeneralDisplay generalDisplay = new GeneralDisplay(
 			userNetwork);
 	private static PerspectiveDisplay perspectiveDisplay = new PerspectiveDisplay(
+			userNetwork);
+	public static ExternalInteractor externalInteractor = new ExternalInteractor(
 			userNetwork);
 
 	@Override
