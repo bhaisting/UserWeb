@@ -1,6 +1,7 @@
 package application;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -17,10 +18,12 @@ import javafx.stage.Stage;
 
 public class PerspectiveDisplay {
 	private UserNetwork network;
+	private Stage mainStage;
 	private Button add_user,add_friend,mutual_friends,remove_friend,remove_self,back_to_general;
 
-	public PerspectiveDisplay(UserNetwork net) {
+	public PerspectiveDisplay(Stage stage, UserNetwork net) {
 		network = net;
+		mainStage = stage;
 		add_user = new Button("Add User");
 		add_friend = new Button("Add Friendship");
 		mutual_friends = new Button("Mutual Friends");
@@ -39,7 +42,7 @@ public class PerspectiveDisplay {
 		Pane root = new Pane();
 		Label title = new Label(Main.perspectivePerson.getUsername()+"'s Perspective");
 		title.relocate(300, 20);
-		title.setFont(new Font("Arial", 20));
+		title.setFont(Main.bigFont);
 		root.getChildren().add(title);
 		root.setPrefSize(800,600);
 		
@@ -88,7 +91,7 @@ public class PerspectiveDisplay {
 
 		VBox friends = new VBox();
 		Label friendLabel = new Label("Friends");
-		friendLabel.setFont(new Font("Arial",14));
+		friendLabel.setFont(Main.medFont);
 		friends.getChildren().add(friendLabel);
 		for (UserNode node : Main.perspectivePerson.getFriendList()) {
 			friends.getChildren().add(new Label(node.getUsername()));
@@ -116,12 +119,21 @@ public class PerspectiveDisplay {
 		remove_friend.setOnAction(event -> {
 			System.out.println("Success!");
 		});
-		remove_self.setOnAction(event -> {
+		remove_self.setOnAction(event -> {//TROUBLESHOOT THIS, IT WORKS BUT I DON'T KNOW WHY
 			System.out.println("Success!");
+			try {
+			network.deleteUser(Main.perspectivePerson.getUsername());
+			}catch(Exception e) {
+				network.deleteUser(Main.perspectivePerson.getUsername());
+			}
+			Main.perspective=false;
+			mainStage.setScene(new Scene(Main.generalDisplay.getGeneralScreen(),Main.WINDOW_WIDTH,Main.WINDOW_HEIGHT));
+			
 		});
 		back_to_general.setOnAction(event -> {
 			System.out.println("Back to general!");
 			Main.perspective=false;
+			mainStage.setScene(new Scene(Main.generalDisplay.getGeneralScreen(),Main.WINDOW_WIDTH,Main.WINDOW_HEIGHT));
 		});
 	}
 }

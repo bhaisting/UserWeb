@@ -1,11 +1,16 @@
 package application;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -13,14 +18,17 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 
 public class GeneralDisplay {
 	private UserNetwork network;
+	private Stage mainStage;
 	private Button data_entry, add_user, add_friend, visualize_network,
 			shortest_path, remove_friend, remove_user;
 
-	public GeneralDisplay(UserNetwork net) {
+	public GeneralDisplay(Stage stage, UserNetwork net) {
 		network = net;
+		mainStage = stage;
 		data_entry = new Button("Import Data File");
 		add_user = new Button("Add User");
 		add_friend = new Button("Add Friendship");
@@ -39,7 +47,7 @@ public class GeneralDisplay {
 
 		Label title = new Label("General Perspective");
 		title.relocate(320, 20);
-		title.setFont(new Font("Arial", 20));
+		title.setFont(Main.bigFont);
 		root.getChildren().add(title);
 
 		root.setPrefSize(800, 600);
@@ -69,7 +77,7 @@ public class GeneralDisplay {
 
 		VBox users = new VBox();
 		Label userLabel = new Label("All Users");
-		userLabel.setFont(new Font("Arial",14));
+		userLabel.setFont(Main.medFont);
 		users.getChildren().add(userLabel);
 		for (UserNode node : network.getUserList()) {
 			users.getChildren().add(new Label(node.getUsername()));
@@ -85,19 +93,43 @@ public class GeneralDisplay {
 
 	public void buttonHandler(Pane root) {
 		add_user.setOnAction(event -> {
+			Label label = new Label(
+					"Input the name of the new user, then press enter.");
+			label.setFont(Main.medFont);
+			label.relocate(250, 220);
 			TextField name = new TextField("Input name");
-			name.relocate(300, 300);
-			root.getChildren().add(name);
+			name.setOnKeyPressed(new EventHandler<KeyEvent>() {
+				@Override
+				public void handle(KeyEvent e) {
+					if (e.getCode() == KeyCode.ENTER) {
+						network.createUser(name.getText());
+						Pane newPane = getGeneralScreen();
+						newPane.getChildren().add(name);
+						newPane.getChildren().add(label);
+						mainStage.setScene(
+								new Scene(newPane, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+					}
+				}
+			});
+			name.relocate(350, 250);
+			Pane newPane = getGeneralScreen();
+			newPane.getChildren().add(name);
+			newPane.getChildren().add(label);
+			mainStage
+					.setScene(new Scene(newPane, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 			System.out.println("Success!");
 		});
-		
+
 		add_friend.setOnAction(event -> {
 			TextField name1 = new TextField("Input name 1");
-			name1.relocate(300, 250);
+			name1.relocate(350, 250);
+			Pane newPane = getGeneralScreen();
 			TextField name2 = new TextField("Input name 2");
-			name2.relocate(300, 350);
-			root.getChildren().add(name1);
-			root.getChildren().add(name2);
+			name2.relocate(350, 350);
+			newPane.getChildren().add(name1);
+			newPane.getChildren().add(name2);
+			mainStage
+					.setScene(new Scene(newPane, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 			System.out.println("Success!");
 		});
 
@@ -106,17 +138,17 @@ public class GeneralDisplay {
 			for (UserNode i : network.getUserList()) {
 				tempVisual += i.getUsername() + " -> ";
 				for (UserNode j : i.getFriendList()) {
-					tempVisual += j.getUsername()+", ";
+					tempVisual += j.getUsername() + ", ";
 				}
-				tempVisual+="\n";
+				tempVisual += "\n";
 			}
 			Label visual = new Label(tempVisual);
-			visual.setFont(new Font("Arial",16));
-			visual.relocate(300,150);
+			visual.setFont(new Font("Arial", 16));
+			visual.relocate(300, 150);
 			root.getChildren().add(visual);
 			System.out.println("Success!");
 		});
-		
+
 		shortest_path.setOnAction(event -> {
 			TextField name1 = new TextField("Input name 1");
 			name1.relocate(300, 250);
@@ -140,7 +172,7 @@ public class GeneralDisplay {
 		});
 		data_entry.setOnAction(event -> {
 			TextField dataEntry = new TextField("Input filename here");
-			dataEntry.relocate(300,300);
+			dataEntry.relocate(300, 300);
 			root.getChildren().add(dataEntry);
 		});
 	}

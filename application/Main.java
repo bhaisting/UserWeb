@@ -9,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -19,14 +20,17 @@ public class Main extends Application {
 	public static boolean perspective = false;
 	public static UserNode perspectivePerson = new UserNode("");
 	public static UserNetwork userNetwork = new UserNetwork();
-	public static GeneralDisplay generalDisplay = new GeneralDisplay(userNetwork);
-	public static PerspectiveDisplay perspectiveDisplay = new PerspectiveDisplay(
-			userNetwork);
+	public static GeneralDisplay generalDisplay;
+	public static PerspectiveDisplay perspectiveDisplay;
 	public static ExternalInteractor externalInteractor = new ExternalInteractor(
 			userNetwork);
+	public static final Font bigFont = new Font("Arial",24);
+	public static final Font medFont = new Font("Arial",16);
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		generalDisplay = new GeneralDisplay(primaryStage, userNetwork);
+		perspectiveDisplay = new PerspectiveDisplay(primaryStage, userNetwork);
 		Pane root; // Contains the current image as well as button responses
 		if (!perspective) { // General Display
 			root = generalDisplay.getGeneralScreen();

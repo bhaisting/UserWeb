@@ -13,13 +13,13 @@ public class UserNetwork implements UserNetworkADT {
 	public void setFriend(String username, String username2) {
 		UserNode name1 = null;
 		UserNode name2 = null;
-		if(username.equals(username2)) {
+		if (username.equals(username2)) {
 			return;
 		}
 		for (UserNode i : this.userList) {
 			if (i.getUsername().equals(username)) {
 				name1 = i;
-			}else if (i.getUsername().equals(username2)) {
+			} else if (i.getUsername().equals(username2)) {
 				name2 = i;
 			}
 		}
@@ -42,7 +42,7 @@ public class UserNetwork implements UserNetworkADT {
 		for (UserNode i : this.userList) {
 			if (i.getUsername().equals(username)) {
 				name1 = i;
-			}else if (i.getUsername().equals(username2)) {
+			} else if (i.getUsername().equals(username2)) {
 				name2 = i;
 			}
 		}
@@ -66,21 +66,29 @@ public class UserNetwork implements UserNetworkADT {
 
 	@Override
 	public void deleteUser(String username) {
-		for (UserNode i : this.userList) {
+		UserNode deletedUser = null;
+		for (UserNode i : userList) {
 			if (i.getUsername().equals(username)) {
-				this.userList.remove(i);
+				userList.remove(i);
+				deletedUser = i;
+				break;
+			}
+		}
+		if (deletedUser != null) {
+			for (UserNode i : userList) {
+				i.removeFriend(deletedUser);
 			}
 		}
 	}
 
 	@Override
 	public LinkedList<UserNode> getUserList() {
-		return this.userList;
+		return userList;
 	}
 
 	@Override
 	public UserNode getUser(String username) {
-		for (UserNode i : this.userList) {
+		for (UserNode i : userList) {
 			if (i.getUsername().equals(username)) {
 				return i;
 			}
