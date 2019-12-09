@@ -24,8 +24,8 @@ public class Main extends Application {
 	public static PerspectiveDisplay perspectiveDisplay;
 	public static ExternalInteractor externalInteractor = new ExternalInteractor(
 			userNetwork);
-	public static final Font bigFont = new Font("Arial",24);
-	public static final Font medFont = new Font("Arial",16);
+	public static final Font bigFont = new Font("Arial", 24);
+	public static final Font medFont = new Font("Arial", 16);
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -44,15 +44,6 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		// Some hardcoded tests of functionality 
-		//NOTE: Perspective display is available, but it's less developed
-		userNetwork.createUser("Jimbo");
-		userNetwork.createUser("Jimbo");
-		userNetwork.createUser("Jorge");
-		userNetwork.setFriend("Jimbo", "Stevie");
-		userNetwork.setFriend("Jorge", "Jimbo");
-		userNetwork.deleteFriend("Jorge", "Stevie");
-		userNetwork.deleteFriend("Stevie", "Jimbo");
 		try {
 			externalInteractor.load("datafiles/example2.txt");
 		} catch (Exception e) {

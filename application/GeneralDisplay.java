@@ -1,10 +1,12 @@
 package application;
 
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -23,12 +25,14 @@ import javafx.stage.Stage;
 public class GeneralDisplay {
 	private UserNetwork network;
 	private Stage mainStage;
+	private Stage popupStage;
 	private Button data_entry, add_user, add_friend, visualize_network,
-			shortest_path, remove_friend, remove_user;
+			shortest_path, remove_friend, remove_user, exit_button;
 
 	public GeneralDisplay(Stage stage, UserNetwork net) {
 		network = net;
 		mainStage = stage;
+		// popupStage = new Stage();
 		data_entry = new Button("Import Data File");
 		add_user = new Button("Add User");
 		add_friend = new Button("Add Friendship");
@@ -40,6 +44,7 @@ public class GeneralDisplay {
 		remove_friend.setWrapText(true);
 		remove_friend.setTextAlignment(TextAlignment.CENTER);
 		remove_user = new Button("Remove User");
+		exit_button = new Button("Exit");
 	}
 
 	public Pane getGeneralScreen() {
@@ -80,7 +85,16 @@ public class GeneralDisplay {
 		userLabel.setFont(Main.medFont);
 		users.getChildren().add(userLabel);
 		for (UserNode node : network.getUserList()) {
-			users.getChildren().add(new Label(node.getUsername()));
+			Hyperlink link = new Hyperlink(node.getUsername());
+			link.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					Main.perspective=true;
+					Main.perspectivePerson = network.getUser(node.getUsername());
+					mainStage.setScene(new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),Main.WINDOW_WIDTH,Main.WINDOW_HEIGHT));
+				}
+			});
+			users.getChildren().add(link);
 		}
 		allUsers.setContent(users);
 		allUsers.setVbarPolicy(ScrollBarPolicy.ALWAYS);
@@ -93,44 +107,11 @@ public class GeneralDisplay {
 
 	public void buttonHandler(Pane root) {
 		add_user.setOnAction(event -> {
-			Label label = new Label(
-					"Input the name of the new user, then press enter.");
-			label.setFont(Main.medFont);
-			label.relocate(250, 220);
-			TextField name = new TextField("Input name");
-			name.setOnKeyPressed(new EventHandler<KeyEvent>() {
-				@Override
-				public void handle(KeyEvent e) {
-					if (e.getCode() == KeyCode.ENTER) {
-						network.createUser(name.getText());
-						Pane newPane = getGeneralScreen();
-						newPane.getChildren().add(name);
-						newPane.getChildren().add(label);
-						mainStage.setScene(
-								new Scene(newPane, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
-					}
-				}
-			});
-			name.relocate(350, 250);
-			Pane newPane = getGeneralScreen();
-			newPane.getChildren().add(name);
-			newPane.getChildren().add(label);
-			mainStage
-					.setScene(new Scene(newPane, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
-			System.out.println("Success!");
+			get1ArgPane("Input the name of the new user, then press enter", 0);
 		});
 
 		add_friend.setOnAction(event -> {
-			TextField name1 = new TextField("Input name 1");
-			name1.relocate(350, 250);
-			Pane newPane = getGeneralScreen();
-			TextField name2 = new TextField("Input name 2");
-			name2.relocate(350, 350);
-			newPane.getChildren().add(name1);
-			newPane.getChildren().add(name2);
-			mainStage
-					.setScene(new Scene(newPane, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
-			System.out.println("Success!");
+			get2ArgPane("Input the name of the friends, then press enter", 0);
 		});
 
 		visualize_network.setOnAction(event -> {
@@ -150,30 +131,107 @@ public class GeneralDisplay {
 		});
 
 		shortest_path.setOnAction(event -> {
-			TextField name1 = new TextField("Input name 1");
-			name1.relocate(300, 250);
-			TextField name2 = new TextField("Input name 2");
-			name2.relocate(300, 350);
-			root.getChildren().add(name1);
-			root.getChildren().add(name2);
+			get2ArgPane("Input the name of the two users, then press enter", 1);
 		});
 		remove_friend.setOnAction(event -> {
-			TextField name1 = new TextField("Input name 1");
-			name1.relocate(300, 250);
-			TextField name2 = new TextField("Input name 2");
-			name2.relocate(300, 350);
-			root.getChildren().add(name1);
-			root.getChildren().add(name2);
+			get2ArgPane("Input the name of the two (now) enemies, then press enter",
+					2);
 		});
 		remove_user.setOnAction(event -> {
-			TextField name = new TextField("Input name");
-			name.relocate(300, 300);
-			root.getChildren().add(name);
+			get1ArgPane("Input the name of user to be removed, then press enter", 1);
 		});
 		data_entry.setOnAction(event -> {
-			TextField dataEntry = new TextField("Input filename here");
-			dataEntry.relocate(300, 300);
-			root.getChildren().add(dataEntry);
+			get1ArgPane("Input the file name here, then press enter", 2);
 		});
+	}
+
+	private void get1ArgPane(String labelText, int commandType) {
+		popupStage = new Stage();
+		Pane root = new Pane();
+		root.setPrefSize(200, 200);
+
+		Label label = new Label(labelText);
+		label.setFont(Main.medFont);
+		label.setWrapText(true);
+		label.setPrefWidth(200);
+		label.setTextAlignment(TextAlignment.CENTER);
+
+		TextField textBox = new TextField();
+		textBox.relocate(25, 100);
+		textBox.setPrefWidth(150);
+
+		Button button = new Button("Enter");
+		button.relocate(50, 150);
+		button.setPrefSize(100, 25);
+		button.setOnAction(event -> {
+			switch (commandType) {
+			case 0: // Add user case
+				network.createUser(textBox.getText());
+				break;
+			case 1: // Remove user case
+				network.deleteUser(textBox.getText());
+				break;
+			case 2: // Data entry case
+				Main.externalInteractor.load(textBox.getText());
+				break;
+			}
+			popupStage.close();
+			mainStage.setScene(
+					new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+		});
+
+		root.getChildren().add(label);
+		root.getChildren().add(textBox);
+		root.getChildren().add(button);
+		popupStage.setScene(new Scene(root, 200, 200));
+		popupStage.show();
+	}
+
+	private void get2ArgPane(String labelText, int commandType) {
+		popupStage = new Stage();
+		Pane root = new Pane();
+		root.setPrefSize(200, 200);
+
+		Label label = new Label(labelText);
+		label.setFont(Main.medFont);
+		label.setWrapText(true);
+		label.setPrefWidth(200);
+		label.setTextAlignment(TextAlignment.CENTER);
+
+		TextField textBox1 = new TextField();
+		textBox1.relocate(25, 60);
+		textBox1.setPrefWidth(150);
+
+		TextField textBox2 = new TextField();
+		textBox2.relocate(25, 110);
+		textBox2.setPrefWidth(150);
+
+		Button button = new Button("Enter");
+		button.relocate(50, 150);
+		button.setPrefSize(100, 25);
+		button.setOnAction(event -> {
+			switch (commandType) {
+			case 0: // Add friend case
+				network.setFriend(textBox1.getText(), textBox2.getText());
+				break;
+			case 1: // Shortest path case
+				// STILL NEEDS TO BE IMPLEMENTED
+				break;
+			case 2: // Remove friend case
+				network.deleteFriend(textBox1.getText(), textBox2.getText());
+				break;
+			}
+
+			popupStage.close();
+			mainStage.setScene(
+					new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+		});
+
+		root.getChildren().add(label);
+		root.getChildren().add(textBox1);
+		root.getChildren().add(textBox2);
+		root.getChildren().add(button);
+		popupStage.setScene(new Scene(root, 200, 200));
+		popupStage.show();
 	}
 }
