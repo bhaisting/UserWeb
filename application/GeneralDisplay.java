@@ -149,14 +149,6 @@ public class GeneralDisplay {
 		});
 
 		visualize_network.setOnAction(event -> {
-			/*
-			 * String tempVisual = ""; for (UserNode i : network.getUserList()) {
-			 * tempVisual += i.getUsername() + " -> "; for (UserNode j :
-			 * i.getFriendList()) { tempVisual += j.getUsername() + ", "; } tempVisual
-			 * += "\n"; } Label visual = new Label(tempVisual); visual.setFont(new
-			 * Font("Arial", 16)); visual.relocate(300, 150);
-			 * root.getChildren().add(visual);
-			 */
 			createVisual();
 		});
 

@@ -50,19 +50,19 @@ public class PerspectiveDisplay {
 	public Pane getPerspectiveScreen() {
 		Pane root = new Pane();
 		root.setPrefSize(800, 600);
-		
+
 		// Creates the title label
 		Label title = new Label(
 				Main.perspectivePerson.getUsername() + "'s Perspective");
 		title.relocate(300, 20);
 		title.setFont(Main.bigFont);
 		root.getChildren().add(title);
-		
-		//All buttons are placed, given their size, and added to the pane
+
+		// All buttons are placed, given their size, and added to the pane
 		exit_button.relocate(650, 20);
 		exit_button.setPrefSize(125, 50);
 		root.getChildren().add(exit_button);
-		
+
 		add_user.relocate(50, 530);
 		add_user.setPrefSize(100, 50);
 		root.getChildren().add(add_user);
@@ -151,19 +151,19 @@ public class PerspectiveDisplay {
 		add_user.setOnAction(event -> {
 			get1ArgPane("Input the name of the new user, then press enter", 0);
 		});
-		
+
 		add_friend.setOnAction(event -> {
 			get1ArgPane("Input the name of your new friend, then press enter", 1);
 		});
-		
+
 		mutual_friends.setOnAction(event -> {
 			get1ArgPane("Input the name of the user, then press enter", 2);
 		});
-		
+
 		remove_friend.setOnAction(event -> {
 			get1ArgPane("Input the name of your (now) enemy, then press enter", 3);
 		});
-		
+
 		remove_self.setOnAction(event -> {// TROUBLESHOOT THIS, IT WORKS BUT I DON'T
 																			// KNOW WHY
 			try {
@@ -176,13 +176,13 @@ public class PerspectiveDisplay {
 					Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 
 		});
-		
+
 		back_to_general.setOnAction(event -> {
 			Main.perspective = false;
 			mainStage.setScene(new Scene(Main.generalDisplay.getGeneralScreen(),
 					Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 		});
-		
+
 		exit_button.setOnAction(event -> {
 			Main.exit();
 		});
@@ -202,61 +202,67 @@ public class PerspectiveDisplay {
 		TextField textBox = new TextField();
 		textBox.relocate(25, 100);
 		textBox.setPrefWidth(150);
-		
-		Pane mainRoot = getPerspectiveScreen();
 
 		Button button = new Button("Enter");
 		button.relocate(50, 150);
 		button.setPrefSize(100, 25);
 		button.setOnAction(event -> {
 			switch (commandType) {
+
 			case 0: // Add user case
 				network.createUser(textBox.getText());
+				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
+						Main.WINDOW_HEIGHT));
 				break;
+
 			case 1: // Add friend case
 				network.setFriend(Main.perspectivePerson.getUsername(),
 						textBox.getText());
+				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
+						Main.WINDOW_HEIGHT));
 				break;
+
 			case 2: // Mutual friend case
-				LinkedList<UserNode> list = network.getMutualFriends(Main.perspectivePerson, textBox.getText());
-				if(list==null) { //Name not found case
-					Label text = new Label("The name you entered does not exist in the network");
-					text.setAlignment(Pos.CENTER);
-					text.setMinWidth(200);
-					text.setFont(Main.medFont);
-					text.setStyle("-fx-font-weight: bold");
-					text.relocate(210,150);
-					mainRoot.getChildren().add(text);
-				}else if(list.size()==0){ // No mutual friends case
-					Label text = new Label("No mutual friends found");
-					text.setAlignment(Pos.CENTER);
-					text.setMinWidth(200);
-					text.setFont(Main.medFont);
-					text.setStyle("-fx-font-weight: bold");
-					text.relocate(300,150);
-					mainRoot.getChildren().add(text);
-				}else {
+				Pane mainRoot = getPerspectiveScreen();
+				LinkedList<UserNode> list = network
+						.getMutualFriends(Main.perspectivePerson, textBox.getText());
+				Label text = new Label();
+				text.setAlignment(Pos.CENTER);
+				text.setMinWidth(200);
+				text.setFont(Main.medFont);
+				text.setStyle("-fx-font-weight: bold");
+				mainRoot.getChildren().add(text);
+
+				if (list == null) { // Name not found case
+					text.setText("The name you entered does not exist in the network");
+					text.relocate(210, 150);
+				} else if (list.size() == 0) { // No mutual friends case
+					text.setText("No mutual friends found");
+					text.relocate(300, 150);
+				} else { // Mutual friends found case
 					String s = "";
-					for(UserNode i:list) {
-						s+=i.getUsername()+"\n";
+					for (UserNode i : list) {
+						s += i.getUsername() + "\n";
 					}
-					Label text = new Label("Mutual friends found:\n"+s);
-					text.setAlignment(Pos.CENTER);
-					text.setMinWidth(200);
-					text.setFont(Main.medFont);
-					text.setStyle("-fx-font-weight: bold");
-					text.relocate(290,150);
-					mainRoot.getChildren().add(text);
+					text.setText("Mutual friends found:\n" + s);
+					text.relocate(290, 150);
 				}
+				mainStage
+				.setScene(new Scene(mainRoot, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				break;
+
 			case 3: // Remove friend case
 				network.deleteFriend(Main.perspectivePerson.getUsername(),
 						textBox.getText());
+				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
+						Main.WINDOW_HEIGHT));
 				break;
 			}
+
+			// mainStage
+			// .setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
+			// Main.WINDOW_HEIGHT));
 			popupStage.close();
-			mainStage.setScene(new Scene(mainRoot, Main.WINDOW_WIDTH,
-					Main.WINDOW_HEIGHT));
 		});
 
 		root.getChildren().add(label);

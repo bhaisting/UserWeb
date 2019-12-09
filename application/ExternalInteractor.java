@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class ExternalInteractor {
 	private UserNetwork network;
+	private String log = "";
 
 	public ExternalInteractor(UserNetwork net) {
 		network = net;
@@ -15,7 +16,9 @@ public class ExternalInteractor {
 			Scanner scan = new Scanner(new File(fileName));
 			UserNode perspective = null;
 			while (scan.hasNext()) {
-				String input[] = scan.nextLine().split(" ");
+				String inputText = scan.nextLine();
+				updateLog(inputText);
+				String input[] = inputText.split(" ");
 				if (input[0].equals("a")) {
 					if (input.length == 3) {
 						network.setFriend(input[1], input[2]);
@@ -42,5 +45,17 @@ public class ExternalInteractor {
 			System.out.println("An error was thrown: " + e);
 		}
 		return null;
+	}
+	
+	/**
+	 * Takes in an input line and inserts it into the log
+	 * @param line - Command line to be put into the log
+	 */
+	public void updateLog(String line) {
+		log+=line+"\n";
+	}
+	
+	public void saveLog() {
+		
 	}
 }
