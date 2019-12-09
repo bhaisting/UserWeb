@@ -27,6 +27,9 @@ public class Main extends Application {
 	public static final Font bigFont = new Font("Arial", 24);
 	public static final Font medFont = new Font("Arial", 16);
 
+	/**
+	 * 
+	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		generalDisplay = new GeneralDisplay(primaryStage, userNetwork);
@@ -43,6 +46,18 @@ public class Main extends Application {
 		primaryStage.show();
 	}
 
+	/**
+	 * Exits the program and prompts the user on if they'd like to save
+	 */
+	public static void exit() {
+		
+	}
+
+	/**
+	 * Launches the display
+	 * 
+	 * @param args - unused
+	 */
 	public static void main(String[] args) {
 		try {
 			externalInteractor.load("datafiles/example2.txt");

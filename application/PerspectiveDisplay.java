@@ -41,17 +41,25 @@ public class PerspectiveDisplay {
 		back_to_general = new Button("Back to General");
 		back_to_general.setWrapText(true);
 		back_to_general.setTextAlignment(TextAlignment.CENTER);
+		exit_button = new Button("Exit");
 	}
 
 	public Pane getPerspectiveScreen() {
 		Pane root = new Pane();
+		root.setPrefSize(800, 600);
+		
+		// Creates the title label
 		Label title = new Label(
 				Main.perspectivePerson.getUsername() + "'s Perspective");
 		title.relocate(300, 20);
 		title.setFont(Main.bigFont);
 		root.getChildren().add(title);
-		root.setPrefSize(800, 600);
-
+		
+		//All buttons are placed, given their size, and added to the pane
+		exit_button.relocate(650, 20);
+		exit_button.setPrefSize(125, 50);
+		root.getChildren().add(exit_button);
+		
 		add_user.relocate(50, 530);
 		add_user.setPrefSize(100, 50);
 		root.getChildren().add(add_user);
@@ -78,7 +86,6 @@ public class PerspectiveDisplay {
 
 		ScrollPane allUsers = new ScrollPane();
 		allUsers.setPrefSize(110, 500);
-
 		VBox users = new VBox();
 		Label userLabel = new Label("All Users");
 		userLabel.setFont(new Font("Arial", 14));
@@ -103,8 +110,8 @@ public class PerspectiveDisplay {
 		root.getChildren().add(allUsers);
 
 		ScrollPane allFriends = new ScrollPane();
-		allFriends.setPrefSize(110, 500);
-		allFriends.relocate(690, 0);
+		allFriends.setPrefSize(110, 410);
+		allFriends.relocate(690, 90);
 
 		VBox friends = new VBox();
 		Label friendLabel = new Label("Friends");
@@ -141,18 +148,21 @@ public class PerspectiveDisplay {
 		add_user.setOnAction(event -> {
 			get1ArgPane("Input the name of the new user, then press enter", 0);
 		});
+		
 		add_friend.setOnAction(event -> {
 			get1ArgPane("Input the name of your new friend, then press enter", 1);
 		});
+		
 		mutual_friends.setOnAction(event -> {
 			get1ArgPane("Input the name of the user, then press enter", 2);
 		});
+		
 		remove_friend.setOnAction(event -> {
 			get1ArgPane("Input the name of your (now) enemy, then press enter", 3);
 		});
+		
 		remove_self.setOnAction(event -> {// TROUBLESHOOT THIS, IT WORKS BUT I DON'T
 																			// KNOW WHY
-			System.out.println("Success!");
 			try {
 				network.deleteUser(Main.perspectivePerson.getUsername());
 			} catch (Exception e) {
@@ -163,11 +173,15 @@ public class PerspectiveDisplay {
 					Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 
 		});
+		
 		back_to_general.setOnAction(event -> {
-			System.out.println("Back to general!");
 			Main.perspective = false;
 			mainStage.setScene(new Scene(Main.generalDisplay.getGeneralScreen(),
 					Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+		});
+		
+		exit_button.setOnAction(event -> {
+			Main.exit();
 		});
 	}
 

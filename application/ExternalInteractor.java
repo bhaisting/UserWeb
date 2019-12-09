@@ -10,9 +10,10 @@ public class ExternalInteractor {
 		network = net;
 	}
 
-	public void load(String fileName) {
+	public UserNode load(String fileName) {
 		try {
 			Scanner scan = new Scanner(new File(fileName));
+			UserNode perspective = null;
 			while (scan.hasNext()) {
 				String input[] = scan.nextLine().split(" ");
 				if (input[0].equals("a")) {
@@ -31,12 +32,15 @@ public class ExternalInteractor {
 					if (network.getUser(input[1]) != null) {
 						Main.perspective = true;
 						Main.perspectivePerson = network.getUser(input[1]);
+						perspective = Main.perspectivePerson;
 					}
 				}
 			}
 			scan.close();
+			return perspective;
 		} catch (Exception e) {
 			System.out.println("An error was thrown: " + e);
 		}
+		return null;
 	}
 }
