@@ -95,4 +95,27 @@ public class UserNetwork implements UserNetworkADT {
 		}
 		return null;
 	}
+
+	/**
+	 * Returns the mutual friends of two names, if either name doesn't exist,
+	 * returns null. If the names are the same, all friends of that user will be
+	 * printed
+	 * 
+	 * @param name1 - Name of the first user
+	 * @param name2 - Name of the second user
+	 * @return LinkedList of mutual friends
+	 */
+	public LinkedList<UserNode> getMutualFriends(UserNode user1, String name2) {
+		LinkedList<UserNode> mutualList = new LinkedList<UserNode>();
+		UserNode user2 = getUser(name2);
+		if (user2 == null) {
+			return null;
+		}
+		for (UserNode i : user1.getFriendList()) {
+			if (user2.getFriendList().contains(i)) {
+				mutualList.add(i);
+			}
+		}
+		return mutualList;
+	}
 }

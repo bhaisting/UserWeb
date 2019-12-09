@@ -1,8 +1,11 @@
 package application;
 
+import java.util.LinkedList;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
@@ -199,6 +202,8 @@ public class PerspectiveDisplay {
 		TextField textBox = new TextField();
 		textBox.relocate(25, 100);
 		textBox.setPrefWidth(150);
+		
+		Pane mainRoot = getPerspectiveScreen();
 
 		Button button = new Button("Enter");
 		button.relocate(50, 150);
@@ -213,6 +218,36 @@ public class PerspectiveDisplay {
 						textBox.getText());
 				break;
 			case 2: // Mutual friend case NEEDS TO BE IMPLEMENTED
+				LinkedList<UserNode> list = network.getMutualFriends(Main.perspectivePerson, textBox.getText());
+				if(list==null) { //Name not found case
+					Label text = new Label("The name you entered does not exist in the network");
+					text.setAlignment(Pos.CENTER);
+					text.setMinWidth(200);
+					text.setFont(Main.medFont);
+					text.setStyle("-fx-font-weight: bold");
+					text.relocate(210,150);
+					mainRoot.getChildren().add(text);
+				}else if(list.size()==0){ // No mutual friends case
+					Label text = new Label("No mutual friends found");
+					text.setAlignment(Pos.CENTER);
+					text.setMinWidth(200);
+					text.setFont(Main.medFont);
+					text.setStyle("-fx-font-weight: bold");
+					text.relocate(300,150);
+					mainRoot.getChildren().add(text);
+				}else {
+					String s = "";
+					for(UserNode i:list) {
+						s+=i.getUsername()+"\n";
+					}
+					Label text = new Label("Mutual friends found:\n"+s);
+					text.setAlignment(Pos.CENTER);
+					text.setMinWidth(200);
+					text.setFont(Main.medFont);
+					text.setStyle("-fx-font-weight: bold");
+					text.relocate(290,150);
+					mainRoot.getChildren().add(text);
+				}
 				break;
 			case 3: // Remove friend case
 				network.deleteFriend(Main.perspectivePerson.getUsername(),
@@ -220,7 +255,7 @@ public class PerspectiveDisplay {
 				break;
 			}
 			popupStage.close();
-			mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
+			mainStage.setScene(new Scene(mainRoot, Main.WINDOW_WIDTH,
 					Main.WINDOW_HEIGHT));
 		});
 
