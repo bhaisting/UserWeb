@@ -118,4 +118,26 @@ public class UserNetwork implements UserNetworkADT {
 		}
 		return mutualList;
 	}
+
+	public int getNumGroups() {
+		LinkedList<UserNode> tempList = new LinkedList<UserNode>();
+		for (UserNode i : userList) {// necessary to ensure that userList isn't
+																	// changed
+			tempList.add(i);
+		}
+		int count = 0;
+		while (!tempList.isEmpty()) {
+			numGroupHelper(tempList, tempList.get(0));
+			count++;
+		}
+		return count;
+	}
+
+	public void numGroupHelper(LinkedList<UserNode> bigList, UserNode node) {
+		if (bigList.remove(node)) {
+			for (UserNode i : node.getFriendList()) {
+				numGroupHelper(bigList, i);
+			}
+		}
+	}
 }

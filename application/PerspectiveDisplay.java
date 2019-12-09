@@ -217,7 +217,7 @@ public class PerspectiveDisplay {
 				network.setFriend(Main.perspectivePerson.getUsername(),
 						textBox.getText());
 				break;
-			case 2: // Mutual friend case NEEDS TO BE IMPLEMENTED
+			case 2: // Mutual friend case
 				LinkedList<UserNode> list = network.getMutualFriends(Main.perspectivePerson, textBox.getText());
 				if(list==null) { //Name not found case
 					Label text = new Label("The name you entered does not exist in the network");

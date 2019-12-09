@@ -63,6 +63,19 @@ public class GeneralDisplay {
 		title.relocate(320, 20);
 		title.setFont(Main.bigFont);
 		root.getChildren().add(title);
+		
+		//Creates the labels for number of groups
+		Label numGroups = new Label("Number of groups:");
+		numGroups.setFont(Main.medFont);
+		numGroups.relocate(140,20);
+		root.getChildren().add(numGroups);
+		
+		Label number = new Label(Integer.toString(network.getNumGroups()));
+		number.setMinWidth(100);
+		number.setAlignment(Pos.CENTER);
+		number.setFont(Main.bigFont);
+		number.relocate(155,40);
+		root.getChildren().add(number);
 
 		// All buttons are placed, given their size, and added to the pane
 		exit_button.relocate(650, 20);
