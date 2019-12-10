@@ -159,31 +159,50 @@ public class UserNetwork implements UserNetworkADT {
 		}
 		LinkedList<UserNode> path = new LinkedList<UserNode>();
 		LinkedList<UserNode> tempList = new LinkedList<UserNode>();
+		LinkedList<UserNode> queue = new LinkedList<UserNode>();
+		queue.add(user1);
 		for (UserNode i : userList) {// necessary to ensure that userList isn't
 																	// changed
 			tempList.add(i);
 		}
-		shortestPathHelper(path,tempList,user1,user2);
+		shortestPathHelper(path, tempList, queue, user1, user2);
 		return path;
 	}
 
+	/**
+	 * Recursive helper method to shortestPath
+	 * 
+	 * @param path    - Path to the target
+	 * @param bigList - List of all unvisited UserNodes in the network
+	 * @param queue   - Queue for implementing the breadth first search
+	 * @param current - Current UserNode
+	 * @param target
+	 * @return boolean - If a path was found
+	 */
 	private boolean shortestPathHelper(LinkedList<UserNode> path,
-			LinkedList<UserNode> bigList, UserNode current, UserNode target) {
-		if(current.equals(target)) {
-			path.add(0,current);
-			bigList.remove(path);
+			LinkedList<UserNode> bigList, LinkedList<UserNode> queue,
+			UserNode current, UserNode target) {
+		if (current.equals(target)) {
+			path.add(0, current);
+			bigList.remove(current);
 			return true;
 		}
-		if(bigList.remove(current)) {
-			for(UserNode i : current.getFriendList()) {
-				if(shortestPathHelper(path,bigList,i,target)) {
-					path.add(0,current);
+		if (bigList.remove(current)) {
+			for (UserNode i : current.getFriendList()) {
+				queue.add(i);
+				if (shortestPathHelper(path, bigList, queue, queue, target)) {
+					path.add(0, current);
 					return true;
 				}
 			}
+			(shortestPathHelper(path,bigList,queue,queue.remove(),target)
 		}
 		return false;
 	}
-	
-	
+
+	public static void main(String args[]) {
+		UserNetwork net = new UserNetwork();
+		//net.addFriend();
+	}
+
 }
