@@ -170,7 +170,8 @@ public class PerspectiveDisplay {
 											// KNOW WHY
 			try {
 				network.deleteUser(Main.perspectivePerson.getUsername());
-			} catch (Exception e) {}
+			} catch (Exception e) {
+			}
 			Main.perspective = false;
 			mainStage
 					.setScene(new Scene(Main.generalDisplay.getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
@@ -211,16 +212,20 @@ public class PerspectiveDisplay {
 			switch (commandType) {
 
 			case 0: // Add user case
-				network.createUser(textBox.getText());
-				Main.externalInteractor.updateLog("a " + textBox.getText());
-				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				if (Main.validateInput(textBox.getText())) {
+					network.createUser(textBox.getText());
+					Main.externalInteractor.updateLog("a " + textBox.getText());
+					mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				}
 				break;
 
 			case 1: // Add friend case
-				network.setFriend(Main.perspectivePerson.getUsername(), textBox.getText());
-				Main.externalInteractor
-						.updateLog("a " + Main.perspectivePerson.getUsername() + " " + textBox.getText());
-				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				if (Main.validateInput(textBox.getText())) {
+					network.setFriend(Main.perspectivePerson.getUsername(), textBox.getText());
+					Main.externalInteractor
+							.updateLog("a " + Main.perspectivePerson.getUsername() + " " + textBox.getText());
+					mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				}
 				break;
 
 			case 2: // Mutual friend case

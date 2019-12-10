@@ -207,9 +207,11 @@ public class GeneralDisplay {
 		button.setOnAction(event -> {
 			switch (commandType) {
 			case 0: // Add user case
-				network.createUser(textBox.getText());
-				Main.externalInteractor.updateLog("a " + textBox.getText());
-				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				if (Main.validateInput(textBox.getText())) {
+					network.createUser(textBox.getText());
+					Main.externalInteractor.updateLog("a " + textBox.getText());
+					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				}
 				break;
 			case 1: // Remove user case
 				if (network.deleteUser(textBox.getText())) {
@@ -262,8 +264,10 @@ public class GeneralDisplay {
 		button.setOnAction(event -> {
 			switch (commandType) {
 			case 0: // Add friend case
-				network.setFriend(textBox1.getText(), textBox2.getText());
-				Main.externalInteractor.updateLog("a " + textBox1.getText() + " " + textBox2.getText());
+				if (Main.validateInput(textBox1.getText()) && Main.validateInput(textBox2.getText())) {
+					network.setFriend(textBox1.getText(), textBox2.getText());
+					Main.externalInteractor.updateLog("a " + textBox1.getText() + " " + textBox2.getText());
+				}
 				break;
 			case 1: // Shortest path case
 				// STILL NEEDS TO BE IMPLEMENTED
