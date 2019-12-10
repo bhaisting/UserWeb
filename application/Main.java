@@ -141,6 +141,7 @@ public class Main extends Application {
 			yes.setOnAction(subEvent -> {
 				confirmation.close();
 				mainStage.close();
+				externalInteractor.saveLog(null);
 			});
 			confirm.getChildren().add(yes);
 

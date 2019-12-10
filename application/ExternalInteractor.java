@@ -91,6 +91,7 @@ public class ExternalInteractor {
 
 	public boolean saveLog(String fileName) {
 		toLog.close();
+		if(fileName!=null) {
 		try {
 			PrintWriter printer = new PrintWriter(fileName);
 			printer.print(log);
@@ -99,5 +100,7 @@ public class ExternalInteractor {
 		}catch(Exception e) {
 			return false;
 		}
+	}
+		return false;
 	}
 }
