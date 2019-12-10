@@ -93,6 +93,9 @@ public class PerspectiveDisplay {
 		Label userLabel = new Label("All Users");
 		userLabel.setFont(new Font("Arial", 14));
 		users.getChildren().add(userLabel);
+		Label numUsers = new Label("Count: " + network.getUserList().size());
+		numUsers.setFont(Main.medFont);
+		users.getChildren().add(numUsers);
 		for (UserNode node : network.getUserList()) {
 			Hyperlink link = new Hyperlink(node.getUsername());
 			link.setOnAction(new EventHandler<ActionEvent>() {
@@ -120,6 +123,10 @@ public class PerspectiveDisplay {
 		Label friendLabel = new Label("Friends");
 		friendLabel.setFont(Main.medFont);
 		friends.getChildren().add(friendLabel);
+		Label numFriends = new Label(
+				"Count: " + Main.perspectivePerson.getFriendList().size());
+		numFriends.setFont(Main.medFont);
+		friends.getChildren().add(numFriends);
 		for (UserNode node : Main.perspectivePerson.getFriendList()) {
 			Hyperlink link = new Hyperlink(node.getUsername());
 			link.setOnAction(new EventHandler<ActionEvent>() {
@@ -247,8 +254,8 @@ public class PerspectiveDisplay {
 					text.setText("Mutual friends found:\n" + s);
 					text.relocate(290, 150);
 				}
-				mainStage
-				.setScene(new Scene(mainRoot, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				mainStage.setScene(
+						new Scene(mainRoot, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				break;
 
 			case 3: // Remove friend case

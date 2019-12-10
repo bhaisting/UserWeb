@@ -32,7 +32,7 @@ public class GeneralDisplay {
 	private Stage mainStage;
 	private Stage popupStage;
 	private Button data_entry, add_user, add_friend, visualize_network,
-			shortest_path, remove_friend, remove_user, exit_button;
+			shortest_path, remove_friend, remove_user, exit_button, clear_network;
 
 	public GeneralDisplay(Stage stage, UserNetwork net) {
 		network = net;
@@ -52,6 +52,7 @@ public class GeneralDisplay {
 		remove_friend.setTextAlignment(TextAlignment.CENTER);
 		remove_user = new Button("Remove User");
 		exit_button = new Button("Exit");
+		clear_network = new Button("Clear Network");
 	}
 
 	public Pane getGeneralScreen() {
@@ -78,8 +79,12 @@ public class GeneralDisplay {
 		root.getChildren().add(number);
 
 		// All buttons are placed, given their size, and added to the pane
-		exit_button.relocate(650, 20);
-		exit_button.setPrefSize(125, 50);
+		clear_network.relocate(570,20);
+		clear_network.setPrefSize(100,50);
+		root.getChildren().add(clear_network);
+		
+		exit_button.relocate(680, 20);
+		exit_button.setPrefSize(100, 50);
 		root.getChildren().add(exit_button);
 
 		add_user.relocate(20, 530);
@@ -116,6 +121,9 @@ public class GeneralDisplay {
 		Label userLabel = new Label("All Users");
 		userLabel.setFont(Main.medFont);
 		users.getChildren().add(userLabel);
+		Label numUsers = new Label("Count: "+network.getUserList().size());
+		numUsers.setFont(Main.medFont);
+		users.getChildren().add(numUsers);
 		for (UserNode node : network.getUserList()) {
 			Hyperlink link = new Hyperlink(node.getUsername());
 			link.setOnAction(new EventHandler<ActionEvent>() {
@@ -172,6 +180,12 @@ public class GeneralDisplay {
 		exit_button.setOnAction(event -> {
 			Main.exit();
 		});
+		
+		clear_network.setOnAction(event ->{
+			network.getUserList().clear();
+			mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
+					Main.WINDOW_HEIGHT));
+		});
 	}
 
 	private void get1ArgPane(String labelText, int commandType) {
@@ -210,6 +224,9 @@ public class GeneralDisplay {
 					mainStage.setScene(
 							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
 									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				} else {
+					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
+							Main.WINDOW_HEIGHT));
 				}
 				break;
 			}

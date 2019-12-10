@@ -2,14 +2,18 @@ package application;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -26,12 +30,14 @@ public class Main extends Application {
 			userNetwork);
 	public static final Font bigFont = new Font("Arial", 24);
 	public static final Font medFont = new Font("Arial", 16);
+	private static Stage mainStage;
 
 	/**
 	 * 
 	 */
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		mainStage = primaryStage;
 		generalDisplay = new GeneralDisplay(primaryStage, userNetwork);
 		perspectiveDisplay = new PerspectiveDisplay(primaryStage, userNetwork);
 		Pane root; // Contains the current image as well as button responses
@@ -49,9 +55,58 @@ public class Main extends Application {
 	/**
 	 * Exits the program and prompts the user on if they'd like to save
 	 */
-	public static void exit() {
+	public static void exit() {		
+		Pane root = new Pane();
+		root.setPrefSize(300, 300);
+
+		Label label = new Label(
+				"Would you like to save? Input the file name below!");
+		label.setWrapText(true);
+		label.setTextAlignment(TextAlignment.CENTER);
+		label.setFont(medFont);
+		label.setMaxWidth(300);
+		root.getChildren().add(label);
+
+		TextField textBox = new TextField();
+		textBox.relocate(50, 100);
+		textBox.setPrefWidth(200);
+		root.getChildren().add(textBox);
+
+		Label status = new Label();
+		status.setMinWidth(300);
+		status.setAlignment(Pos.CENTER);
+		status.relocate(0,60);
+		status.setFont(bigFont);
 		
+		Button save = new Button("Save");
+		save.relocate(30, 220);
+		save.setPrefSize(100, 50);
+		root.getChildren().add(status);
+		save.setOnAction(event -> {
+			if(externalInteractor.saveLog(textBox.getText())) {
+				status.setText("Success! File saved!");
+			}else {
+				status.setText("An error occurred with the file name.");
+			}
+			
+		});
+		root.getChildren().add(save);
+
+		Button noSave = new Button("Don't Save");
+		noSave.relocate(170, 220);
+		noSave.setPrefSize(100, 50);
+		noSave.setOnAction(event -> {
+			mainStage.close();
+		});
+		root.getChildren().add(noSave);
+		
+		mainStage.setScene(new Scene(root,300,300));
 	}
+	
+	/*private boolean confirmationPop() {
+		Stage confirmation = new Stage();
+		
+	}*/
 
 	/**
 	 * Launches the display

@@ -1,14 +1,22 @@
 package application;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class ExternalInteractor {
 	private UserNetwork network;
 	private String log = "";
+	private PrintWriter toLog;
 
 	public ExternalInteractor(UserNetwork net) {
 		network = net;
+		try {
+			toLog = new PrintWriter("log.txt");
+		} catch (Exception e) {
+			System.out.println("An error was thrown creating the log: " + e);
+		}
 	}
 
 	public UserNode load(String fileName) {
@@ -40,22 +48,46 @@ public class ExternalInteractor {
 				}
 			}
 			scan.close();
+			// handles fringe case where the perspective of a deleted person is shown
+			if (!network.getUserList().contains(Main.perspectivePerson)) {
+				Main.perspective = false;
+				Main.perspectivePerson = null;
+				return null;
+			}
 			return perspective;
 		} catch (Exception e) {
 			System.out.println("An error was thrown: " + e);
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Takes in an input line and inserts it into the log
+	 * 
 	 * @param line - Command line to be put into the log
 	 */
 	public void updateLog(String line) {
-		log+=line+"\n";
+		if (line.equals("clear")) {
+			log = "";
+			try {
+			toLog = new PrintWriter("log.txt");
+			}catch(Exception e) {
+				System.out.println(e);
+			}
+		} else {
+			toLog.println(line);
+			log += line + "\n";
+		}
 	}
-	
-	public void saveLog() {
-		
+
+	public boolean saveLog(String fileName) {
+		toLog.close();
+		try {
+			PrintWriter printer = new PrintWriter(fileName);
+			printer.print(log);
+			return true;
+		}catch(Exception e) {
+			return false;
+		}
 	}
 }
