@@ -1,5 +1,8 @@
 package application;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -31,6 +34,9 @@ public class Main extends Application {
 	public static final Font bigFont = new Font("Arial", 24);
 	public static final Font medFont = new Font("Arial", 16);
 	private static Stage mainStage;
+	private static final String validChars = "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9, ,_,'";;
+	private static ArrayList<String> validCharList = new ArrayList<String>(
+			Arrays.asList(validChars.split(",")));
 
 	/**
 	 * 
@@ -161,6 +167,11 @@ public class Main extends Application {
 		mainStage.setScene(new Scene(root, 300, 300));
 	}
 
+	public static boolean validateInput(String input) {
+		ArrayList<String> userInput = new ArrayList<String>(Arrays.asList(input.split("")));
+		return validCharList.containsAll(userInput);
+	}
+
 	/**
 	 * Launches the display
 	 * 
@@ -168,7 +179,7 @@ public class Main extends Application {
 	 */
 	public static void main(String[] args) {
 		try {
-			//externalInteractor.load("datafiles/example2.txt");
+			// externalInteractor.load("datafiles/example2.txt");
 		} catch (Exception e) {
 			System.out.println("An error was thrown while loading a file");
 		}
