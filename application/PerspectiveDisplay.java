@@ -170,9 +170,7 @@ public class PerspectiveDisplay {
 											// KNOW WHY
 			try {
 				network.deleteUser(Main.perspectivePerson.getUsername());
-			} catch (Exception e) {
-				network.deleteUser(Main.perspectivePerson.getUsername());
-			}
+			} catch (Exception e) {}
 			Main.perspective = false;
 			mainStage
 					.setScene(new Scene(Main.generalDisplay.getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
