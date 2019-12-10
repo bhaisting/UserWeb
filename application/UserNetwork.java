@@ -36,7 +36,7 @@ public class UserNetwork implements UserNetworkADT {
 	}
 
 	@Override
-	public void deleteFriend(String username, String username2) {
+	public boolean deleteFriend(String username, String username2) {
 		UserNode name1 = null;
 		UserNode name2 = null;
 		for (UserNode i : this.userList) {
@@ -47,10 +47,11 @@ public class UserNetwork implements UserNetworkADT {
 			}
 		}
 		if (name1 == null || name2 == null) {
-			return;
+			return false;
 		}
 		name1.removeFriend(name2);
 		name2.removeFriend(name1);
+		return true;
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class UserNetwork implements UserNetworkADT {
 	}
 
 	@Override
-	public void deleteUser(String username) {
+	public boolean deleteUser(String username) {
 		UserNode deletedUser = null;
 		for (UserNode i : userList) {
 			if (i.getUsername().equals(username)) {
@@ -78,7 +79,10 @@ public class UserNetwork implements UserNetworkADT {
 			for (UserNode i : userList) {
 				i.removeFriend(deletedUser);
 			}
+		}else {
+			return false;
 		}
+		return true;
 	}
 
 	@Override

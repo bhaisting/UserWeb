@@ -64,25 +64,25 @@ public class GeneralDisplay {
 		title.relocate(320, 20);
 		title.setFont(Main.bigFont);
 		root.getChildren().add(title);
-		
-		//Creates the labels for number of groups
+
+		// Creates the labels for number of groups
 		Label numGroups = new Label("Number of groups:");
 		numGroups.setFont(Main.medFont);
-		numGroups.relocate(140,20);
+		numGroups.relocate(140, 20);
 		root.getChildren().add(numGroups);
-		
+
 		Label number = new Label(Integer.toString(network.getNumGroups()));
 		number.setMinWidth(100);
 		number.setAlignment(Pos.CENTER);
 		number.setFont(Main.bigFont);
-		number.relocate(155,40);
+		number.relocate(155, 40);
 		root.getChildren().add(number);
 
 		// All buttons are placed, given their size, and added to the pane
-		clear_network.relocate(570,20);
-		clear_network.setPrefSize(100,50);
+		clear_network.relocate(570, 20);
+		clear_network.setPrefSize(100, 50);
 		root.getChildren().add(clear_network);
-		
+
 		exit_button.relocate(680, 20);
 		exit_button.setPrefSize(100, 50);
 		root.getChildren().add(exit_button);
@@ -121,7 +121,7 @@ public class GeneralDisplay {
 		Label userLabel = new Label("All Users");
 		userLabel.setFont(Main.medFont);
 		users.getChildren().add(userLabel);
-		Label numUsers = new Label("Count: "+network.getUserList().size());
+		Label numUsers = new Label("Count: " + network.getUserList().size());
 		numUsers.setFont(Main.medFont);
 		users.getChildren().add(numUsers);
 		for (UserNode node : network.getUserList()) {
@@ -131,6 +131,8 @@ public class GeneralDisplay {
 				public void handle(ActionEvent e) {
 					Main.perspective = true;
 					Main.perspectivePerson = network.getUser(node.getUsername());
+					Main.externalInteractor
+							.updateLog("s " + Main.perspectivePerson.getUsername());
 					mainStage.setScene(
 							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
 									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
@@ -180,11 +182,12 @@ public class GeneralDisplay {
 		exit_button.setOnAction(event -> {
 			Main.exit();
 		});
-		
-		clear_network.setOnAction(event ->{
+
+		clear_network.setOnAction(event -> {
 			network.getUserList().clear();
-			mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-					Main.WINDOW_HEIGHT));
+			Main.externalInteractor.clearNetwork();
+			mainStage.setScene(
+					new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 		});
 	}
 
@@ -210,11 +213,14 @@ public class GeneralDisplay {
 			switch (commandType) {
 			case 0: // Add user case
 				network.createUser(textBox.getText());
+				Main.externalInteractor.updateLog("a " + textBox.getText());
 				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
 						Main.WINDOW_HEIGHT));
 				break;
 			case 1: // Remove user case
-				network.deleteUser(textBox.getText());
+				if (network.deleteUser(textBox.getText())) {
+					Main.externalInteractor.updateLog("r " + textBox.getText());
+				}
 				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
 						Main.WINDOW_HEIGHT));
 				break;
@@ -266,12 +272,17 @@ public class GeneralDisplay {
 			switch (commandType) {
 			case 0: // Add friend case
 				network.setFriend(textBox1.getText(), textBox2.getText());
+				Main.externalInteractor
+						.updateLog("a " + textBox1.getText() + " " + textBox2.getText());
 				break;
 			case 1: // Shortest path case
 				// STILL NEEDS TO BE IMPLEMENTED
 				break;
 			case 2: // Remove friend case
-				network.deleteFriend(textBox1.getText(), textBox2.getText());
+				if (network.deleteFriend(textBox1.getText(), textBox2.getText())) {
+					Main.externalInteractor
+							.updateLog("r " + textBox1.getText() + " " + textBox2.getText());
+				}
 				break;
 			}
 
@@ -289,7 +300,8 @@ public class GeneralDisplay {
 	}
 
 	/**
-	 * Works with up to 20-25 people with the current system
+	 * Works with up to 20-25 people with the current system. Creates an oval of
+	 * nodes and then connects them with line segments when they are friends
 	 */
 	private void createVisual() {
 		Pane root = getGeneralScreen();
@@ -306,16 +318,16 @@ public class GeneralDisplay {
 			circles.add(circle);
 			Label label = new Label(user.getUsername());
 			label.setMinWidth(50);
-			label.relocate(xpos-25, ypos-10);
+			label.relocate(xpos - 25, ypos - 10);
 			label.setAlignment(Pos.CENTER);
 			labels.add(label);
-			for(int j=i+1;j<net.size();j++) {
+			for (int j = i + 1; j < net.size(); j++) {
 				UserNode friend = net.get(j);
-				if(user.getFriendList().contains(friend)) {
-					double frac2 = (double) j/net.size();
+				if (user.getFriendList().contains(friend)) {
+					double frac2 = (double) j / net.size();
 					int xpos2 = (int) (450 + 300 * Math.cos(frac2 * 2 * Math.PI));
 					int ypos2 = (int) (290 + 200 * Math.sin(frac2 * 2 * Math.PI));
-					Line line = new Line(xpos,ypos,xpos2,ypos2);
+					Line line = new Line(xpos, ypos, xpos2, ypos2);
 					root.getChildren().add(line);
 				}
 			}

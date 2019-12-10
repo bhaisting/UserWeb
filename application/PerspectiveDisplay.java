@@ -103,6 +103,8 @@ public class PerspectiveDisplay {
 				public void handle(ActionEvent e) {
 					Main.perspective = true;
 					Main.perspectivePerson = network.getUser(node.getUsername());
+					Main.externalInteractor
+					.updateLog("s " + Main.perspectivePerson.getUsername());
 					mainStage.setScene(
 							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
 									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
@@ -134,6 +136,8 @@ public class PerspectiveDisplay {
 				public void handle(ActionEvent e) {
 					Main.perspective = true;
 					Main.perspectivePerson = network.getUser(node.getUsername());
+					Main.externalInteractor
+					.updateLog("s " + Main.perspectivePerson.getUsername());
 					mainStage.setScene(
 							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
 									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
@@ -191,6 +195,7 @@ public class PerspectiveDisplay {
 		});
 
 		exit_button.setOnAction(event -> {
+			Main.externalInteractor.updateLog("r "+Main.perspectivePerson.getUsername());
 			Main.exit();
 		});
 	}
@@ -218,6 +223,7 @@ public class PerspectiveDisplay {
 
 			case 0: // Add user case
 				network.createUser(textBox.getText());
+				Main.externalInteractor.updateLog("a " + textBox.getText());
 				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
 						Main.WINDOW_HEIGHT));
 				break;
@@ -225,6 +231,8 @@ public class PerspectiveDisplay {
 			case 1: // Add friend case
 				network.setFriend(Main.perspectivePerson.getUsername(),
 						textBox.getText());
+				Main.externalInteractor.updateLog("a "
+						+ Main.perspectivePerson.getUsername() + " " + textBox.getText());
 				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
 						Main.WINDOW_HEIGHT));
 				break;
@@ -259,16 +267,14 @@ public class PerspectiveDisplay {
 				break;
 
 			case 3: // Remove friend case
-				network.deleteFriend(Main.perspectivePerson.getUsername(),
-						textBox.getText());
+				if(network.deleteFriend(Main.perspectivePerson.getUsername(),
+						textBox.getText())) {
+					Main.externalInteractor.updateLog("r "+Main.perspectivePerson.getUsername()+" "+textBox.getText());
+				}
 				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
 						Main.WINDOW_HEIGHT));
 				break;
 			}
-
-			// mainStage
-			// .setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
-			// Main.WINDOW_HEIGHT));
 			popupStage.close();
 		});
 

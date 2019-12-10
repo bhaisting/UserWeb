@@ -55,7 +55,7 @@ public class Main extends Application {
 	/**
 	 * Exits the program and prompts the user on if they'd like to save
 	 */
-	public static void exit() {		
+	public static void exit() {
 		Pane root = new Pane();
 		root.setPrefSize(300, 300);
 
@@ -67,7 +67,7 @@ public class Main extends Application {
 		label.setMaxWidth(300);
 		root.getChildren().add(label);
 
-		TextField textBox = new TextField();
+		TextField textBox = new TextField("log.txt");
 		textBox.relocate(50, 100);
 		textBox.setPrefWidth(200);
 		root.getChildren().add(textBox);
@@ -75,20 +75,48 @@ public class Main extends Application {
 		Label status = new Label();
 		status.setMinWidth(300);
 		status.setAlignment(Pos.CENTER);
-		status.relocate(0,60);
+		status.relocate(0, 60);
 		status.setFont(bigFont);
-		
+
 		Button save = new Button("Save");
 		save.relocate(30, 220);
 		save.setPrefSize(100, 50);
 		root.getChildren().add(status);
 		save.setOnAction(event -> {
-			if(externalInteractor.saveLog(textBox.getText())) {
-				status.setText("Success! File saved!");
-			}else {
-				status.setText("An error occurred with the file name.");
-			}
-			
+			Stage confirmation = new Stage();
+			Pane confirm = new Pane();
+			confirm.setPrefSize(200, 200);
+
+			Label confirmText = new Label("Are you sure you want to save?");
+			confirmText.setMaxWidth(200);
+			confirmText.setFont(medFont);
+			confirmText.setWrapText(true);
+			confirmText.setTextAlignment(TextAlignment.CENTER);
+			confirm.getChildren().add(confirmText);
+
+			Button yes = new Button("Yes");
+			yes.setPrefSize(80, 40);
+			yes.relocate(15, 140);
+			yes.setOnAction(subEvent -> {
+				if (externalInteractor.saveLog(textBox.getText())) {
+					status.setText("Success! File saved!");
+				} else {
+					status.setText("An error occurred with the file name.");
+				}
+				confirmation.close();
+			});
+			confirm.getChildren().add(yes);
+
+			Button no = new Button("No");
+			no.setPrefSize(80, 40);
+			no.relocate(105, 140);
+			no.setOnAction(subEvent -> {
+				confirmation.close();
+			});
+			confirm.getChildren().add(no);
+
+			confirmation.setScene(new Scene(confirm, 200, 200));
+			confirmation.show();
 		});
 		root.getChildren().add(save);
 
@@ -96,17 +124,41 @@ public class Main extends Application {
 		noSave.relocate(170, 220);
 		noSave.setPrefSize(100, 50);
 		noSave.setOnAction(event -> {
-			mainStage.close();
+			Stage confirmation = new Stage();
+			Pane confirm = new Pane();
+			confirm.setPrefSize(200, 200);
+
+			Label confirmText = new Label("Are you sure you don't want to save?");
+			confirmText.setMaxWidth(200);
+			confirmText.setFont(medFont);
+			confirmText.setWrapText(true);
+			confirmText.setTextAlignment(TextAlignment.CENTER);
+			confirm.getChildren().add(confirmText);
+
+			Button yes = new Button("Yes");
+			yes.setPrefSize(80, 40);
+			yes.relocate(15, 140);
+			yes.setOnAction(subEvent -> {
+				confirmation.close();
+				mainStage.close();
+			});
+			confirm.getChildren().add(yes);
+
+			Button no = new Button("No");
+			no.setPrefSize(80, 40);
+			no.relocate(105, 140);
+			no.setOnAction(subEvent -> {
+				confirmation.close();
+			});
+			confirm.getChildren().add(no);
+
+			confirmation.setScene(new Scene(confirm, 200, 200));
+			confirmation.show();
 		});
 		root.getChildren().add(noSave);
-		
-		mainStage.setScene(new Scene(root,300,300));
+
+		mainStage.setScene(new Scene(root, 300, 300));
 	}
-	
-	/*private boolean confirmationPop() {
-		Stage confirmation = new Stage();
-		
-	}*/
 
 	/**
 	 * Launches the display

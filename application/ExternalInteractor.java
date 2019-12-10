@@ -18,6 +18,15 @@ public class ExternalInteractor {
 			System.out.println("An error was thrown creating the log: " + e);
 		}
 	}
+	
+	public void clearNetwork() {
+		log="";
+		try {
+			toLog = new PrintWriter("log.txt");
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
 
 	public UserNode load(String fileName) {
 		try {
@@ -85,6 +94,7 @@ public class ExternalInteractor {
 		try {
 			PrintWriter printer = new PrintWriter(fileName);
 			printer.print(log);
+			printer.close();
 			return true;
 		}catch(Exception e) {
 			return false;
