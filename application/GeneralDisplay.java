@@ -3,7 +3,6 @@ package application;
 import java.util.LinkedList;
 
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,26 +12,20 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class GeneralDisplay {
 	private UserNetwork network;
 	private Stage mainStage;
 	private Stage popupStage;
-	private Button data_entry, add_user, add_friend, visualize_network,
-			shortest_path, remove_friend, remove_user, exit_button, clear_network;
+	private Button data_entry, add_user, add_friend, visualize_network, shortest_path, remove_friend, remove_user,
+			exit_button, clear_network;
 
 	public GeneralDisplay(Stage stage, UserNetwork net) {
 		network = net;
@@ -43,16 +36,22 @@ public class GeneralDisplay {
 		data_entry.setTextAlignment(TextAlignment.CENTER);
 		add_user = new Button("Add User");
 		add_friend = new Button("Add Friendship");
+		add_friend.setWrapText(true);
+		add_friend.setTextAlignment(TextAlignment.CENTER);
 		visualize_network = new Button("Visualize Network");
 		visualize_network.setWrapText(true);
 		visualize_network.setTextAlignment(TextAlignment.CENTER);
 		shortest_path = new Button("Shortest Path");
+		shortest_path.setWrapText(true);
+		shortest_path.setTextAlignment(TextAlignment.CENTER);
 		remove_friend = new Button("Remove Friendship");
 		remove_friend.setWrapText(true);
 		remove_friend.setTextAlignment(TextAlignment.CENTER);
 		remove_user = new Button("Remove User");
 		exit_button = new Button("Exit");
 		clear_network = new Button("Clear Network");
+		clear_network.setWrapText(true);
+		clear_network.setTextAlignment(TextAlignment.CENTER);
 	}
 
 	public Pane getGeneralScreen() {
@@ -131,11 +130,9 @@ public class GeneralDisplay {
 				public void handle(ActionEvent e) {
 					Main.perspective = true;
 					Main.perspectivePerson = network.getUser(node.getUsername());
-					Main.externalInteractor
-							.updateLog("s " + Main.perspectivePerson.getUsername());
-					mainStage.setScene(
-							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
-									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+					Main.externalInteractor.updateLog("s " + Main.perspectivePerson.getUsername());
+					mainStage.setScene(new Scene(Main.perspectiveDisplay.getPerspectiveScreen(), Main.WINDOW_WIDTH,
+							Main.WINDOW_HEIGHT));
 				}
 			});
 			users.getChildren().add(link);
@@ -167,8 +164,7 @@ public class GeneralDisplay {
 		});
 
 		remove_friend.setOnAction(event -> {
-			get2ArgPane("Input the name of the two (now) enemies, then press enter",
-					2);
+			get2ArgPane("Input the name of the two (now) enemies, then press enter", 2);
 		});
 
 		remove_user.setOnAction(event -> {
@@ -186,8 +182,7 @@ public class GeneralDisplay {
 		clear_network.setOnAction(event -> {
 			network.getUserList().clear();
 			Main.externalInteractor.clearNetwork();
-			mainStage.setScene(
-					new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+			mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 		});
 	}
 
@@ -214,25 +209,21 @@ public class GeneralDisplay {
 			case 0: // Add user case
 				network.createUser(textBox.getText());
 				Main.externalInteractor.updateLog("a " + textBox.getText());
-				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-						Main.WINDOW_HEIGHT));
+				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				break;
 			case 1: // Remove user case
 				if (network.deleteUser(textBox.getText())) {
 					Main.externalInteractor.updateLog("r " + textBox.getText());
 				}
-				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-						Main.WINDOW_HEIGHT));
+				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				break;
 			case 2: // Data entry case
 				// if the command to change perspectives is given, change perspectives
 				if (Main.externalInteractor.load(textBox.getText()) != null) {
-					mainStage.setScene(
-							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
-									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
-				} else {
-					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
+					mainStage.setScene(new Scene(Main.perspectiveDisplay.getPerspectiveScreen(), Main.WINDOW_WIDTH,
 							Main.WINDOW_HEIGHT));
+				} else {
+					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				}
 				break;
 			}
@@ -272,23 +263,20 @@ public class GeneralDisplay {
 			switch (commandType) {
 			case 0: // Add friend case
 				network.setFriend(textBox1.getText(), textBox2.getText());
-				Main.externalInteractor
-						.updateLog("a " + textBox1.getText() + " " + textBox2.getText());
+				Main.externalInteractor.updateLog("a " + textBox1.getText() + " " + textBox2.getText());
 				break;
 			case 1: // Shortest path case
 				// STILL NEEDS TO BE IMPLEMENTED
 				break;
 			case 2: // Remove friend case
 				if (network.deleteFriend(textBox1.getText(), textBox2.getText())) {
-					Main.externalInteractor
-							.updateLog("r " + textBox1.getText() + " " + textBox2.getText());
+					Main.externalInteractor.updateLog("r " + textBox1.getText() + " " + textBox2.getText());
 				}
 				break;
 			}
 
 			popupStage.close();
-			mainStage.setScene(
-					new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+			mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 		});
 
 		root.getChildren().add(label);
