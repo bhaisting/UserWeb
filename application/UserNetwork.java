@@ -79,7 +79,7 @@ public class UserNetwork implements UserNetworkADT {
 			for (UserNode i : userList) {
 				i.removeFriend(deletedUser);
 			}
-		}else {
+		} else {
 			return false;
 		}
 		return true;
@@ -137,11 +137,41 @@ public class UserNetwork implements UserNetworkADT {
 		return count;
 	}
 
-	public void numGroupHelper(LinkedList<UserNode> bigList, UserNode node) {
+	private void numGroupHelper(LinkedList<UserNode> bigList, UserNode node) {
 		if (bigList.remove(node)) {
 			for (UserNode i : node.getFriendList()) {
 				numGroupHelper(bigList, i);
 			}
 		}
+	}
+
+	public LinkedList<UserNode> shortestPath(String name1, String name2) {
+		UserNode user1 = getUser(name1);
+		UserNode user2 = getUser(name2);
+		if (user1 == null || user2 == null) {
+			return null;
+		}
+		LinkedList<UserNode> path = new LinkedList<UserNode>();
+		path.add(user1);
+		LinkedList<UserNode> tempList = new LinkedList<UserNode>();
+		for (UserNode i : userList) {// necessary to ensure that userList isn't
+																	// changed
+			tempList.add(i);
+		}
+		return path;
+	}
+
+	private boolean shortestPathHelper(LinkedList<UserNode> path,
+			LinkedList<UserNode> bigList, UserNode current, UserNode target) {
+		if(current.equals(target)) {
+			path.add(0,target);
+			return true;
+		}
+		if(bigList.remove(current)) {
+			for(UserNode i : current.getFriendList()) {
+				shortestPathHelper(path,bigList,i,target);
+			}
+		}
+		return false;
 	}
 }

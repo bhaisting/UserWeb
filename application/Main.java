@@ -167,7 +167,7 @@ public class Main extends Application {
 	 */
 	public static void main(String[] args) {
 		try {
-			externalInteractor.load("datafiles/example2.txt");
+			//externalInteractor.load("datafiles/example2.txt");
 		} catch (Exception e) {
 			System.out.println("An error was thrown while loading a file");
 		}

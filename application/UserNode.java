@@ -65,5 +65,4 @@ public class UserNode {
 	public LinkedList<UserNode> getFriendList() {
 		return this.friendList;
 	}
-
 }

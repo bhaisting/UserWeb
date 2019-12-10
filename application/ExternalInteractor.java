@@ -48,7 +48,7 @@ public class ExternalInteractor {
 					} else {
 						network.deleteUser(input[1]);
 					}
-				} else {
+				} else if (input[0].equals("s")) {
 					if (network.getUser(input[1]) != null) {
 						Main.perspective = true;
 						Main.perspectivePerson = network.getUser(input[1]);
