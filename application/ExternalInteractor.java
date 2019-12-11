@@ -18,9 +18,9 @@ public class ExternalInteractor {
 			System.out.println("An error was thrown creating the log: " + e);
 		}
 	}
-	
+
 	public void clearNetwork() {
-		log="";
+		log = "";
 		try {
 			toLog = new PrintWriter("log.txt");
 		} catch (Exception e) {
@@ -35,24 +35,26 @@ public class ExternalInteractor {
 			while (scan.hasNext()) {
 				String inputText = scan.nextLine();
 				updateLog(inputText);
-				String input[] = inputText.split(" ");
-				if (input[0].equals("a")) {
-					if (input.length == 3) {
-						network.setFriend(input[1], input[2]);
-					} else {
-						network.createUser(input[1]);
-					}
-				} else if (input[0].equals("r")) {
-					if (input.length == 3) {
-						network.deleteFriend(input[1], input[2]);
-					} else {
-						network.deleteUser(input[1]);
-					}
-				} else if (input[0].equals("s")) {
-					if (network.getUser(input[1]) != null) {
-						Main.perspective = true;
-						Main.perspectivePerson = network.getUser(input[1]);
-						perspective = Main.perspectivePerson;
+				if (Main.validateInput(inputText)) {
+					String input[] = inputText.split(" ");
+					if (input[0].equals("a")) {
+						if (input.length == 3) {
+							network.setFriend(input[1], input[2]);
+						} else if (input.length == 2) {
+							network.createUser(input[1]);
+						}
+					} else if (input[0].equals("r")) {
+						if (input.length == 3) {
+							network.deleteFriend(input[1], input[2]);
+						} else if (input.length == 2) {
+							network.deleteUser(input[1]);
+						}
+					} else if (input[0].equals("s")) {
+						if (network.getUser(input[1]) != null) {
+							Main.perspective = true;
+							Main.perspectivePerson = network.getUser(input[1]);
+							perspective = Main.perspectivePerson;
+						}
 					}
 				}
 			}
@@ -79,8 +81,8 @@ public class ExternalInteractor {
 		if (line.equals("clear")) {
 			log = "";
 			try {
-			toLog = new PrintWriter("log.txt");
-			}catch(Exception e) {
+				toLog = new PrintWriter("log.txt");
+			} catch (Exception e) {
 				System.out.println(e);
 			}
 		} else {
@@ -91,16 +93,16 @@ public class ExternalInteractor {
 
 	public boolean saveLog(String fileName) {
 		toLog.close();
-		if(fileName!=null) {
-		try {
-			PrintWriter printer = new PrintWriter(fileName);
-			printer.print(log);
-			printer.close();
-			return true;
-		}catch(Exception e) {
-			return false;
+		if (fileName != null) {
+			try {
+				PrintWriter printer = new PrintWriter(fileName);
+				printer.print(log);
+				printer.close();
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
 		}
-	}
 		return false;
 	}
 }
