@@ -77,6 +77,14 @@ public class GeneralDisplay {
 		number.relocate(155, 40);
 		root.getChildren().add(number);
 
+		// Creates the label for status
+		Label status = new Label("Status: " + Main.externalInteractor.status);
+		status.setMinWidth(400);
+		status.setAlignment(Pos.CENTER);
+		status.setFont(Main.medFont);
+		status.relocate(500, 500);
+		root.getChildren().add(status);
+
 		// All buttons are placed, given their size, and added to the pane
 		clear_network.relocate(570, 20);
 		clear_network.setPrefSize(100, 50);
@@ -214,9 +222,9 @@ public class GeneralDisplay {
 				if (Main.validateInput(textBox.getText())) {
 					network.createUser(textBox.getText());
 					Main.externalInteractor.updateLog("a " + textBox.getText());
-					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-							Main.WINDOW_HEIGHT));
 				}
+				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
+						Main.WINDOW_HEIGHT));
 				break;
 			case 1: // Remove user case
 				if (network.deleteUser(textBox.getText())) {
@@ -277,9 +285,9 @@ public class GeneralDisplay {
 					network.setFriend(textBox1.getText(), textBox2.getText());
 					Main.externalInteractor
 							.updateLog("a " + textBox1.getText() + " " + textBox2.getText());
-					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-							Main.WINDOW_HEIGHT));
 				}
+				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
+						Main.WINDOW_HEIGHT));
 				break;
 			case 1: // Shortest path case
 				if (Main.validateInput(textBox1.getText())
@@ -296,7 +304,7 @@ public class GeneralDisplay {
 					if (shortestPath == null) {
 						shortest
 								.setText("One or both of the names don't exist in the network");
-						shortest.relocate(180,100);
+						shortest.relocate(180, 100);
 					} else if (shortestPath.size() == 0) {
 						shortest.setText("No path found");
 					} else {
@@ -318,6 +326,9 @@ public class GeneralDisplay {
 					pane.getChildren().add(shortest);
 					mainStage
 							.setScene(new Scene(pane, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				} else {
+					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
+							Main.WINDOW_HEIGHT));
 				}
 				break;
 			case 2: // Remove friend case
@@ -349,7 +360,7 @@ public class GeneralDisplay {
 		Pane root = getGeneralScreen();
 		LinkedList<UserNode> net = network.getUserList();
 		LinkedList<Circle> circles = new LinkedList<Circle>();
-		LinkedList<Label> labels = new LinkedList<Label>();
+		LinkedList<Hyperlink> labels = new LinkedList<Hyperlink>();
 		for (int i = 0; i < net.size(); i++) {
 			UserNode user = net.get(i);
 			double frac = (double) i / net.size();
@@ -358,10 +369,22 @@ public class GeneralDisplay {
 			Circle circle = new Circle(xpos, ypos, 25);
 			circle.setFill(Color.CYAN);
 			circles.add(circle);
-			Label label = new Label(user.getUsername());
+			Hyperlink label = new Hyperlink(user.getUsername());
 			label.setMinWidth(50);
 			label.relocate(xpos - 25, ypos - 10);
 			label.setAlignment(Pos.CENTER);
+			label.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent e) {
+					Main.perspective = true;
+					Main.perspectivePerson = user;
+					Main.externalInteractor
+							.updateLog("s " + Main.perspectivePerson.getUsername());
+					mainStage.setScene(
+							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
+									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				}
+			});
 			labels.add(label);
 			for (int j = i + 1; j < net.size(); j++) {
 				UserNode friend = net.get(j);

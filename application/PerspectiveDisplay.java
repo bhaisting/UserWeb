@@ -53,6 +53,14 @@ public class PerspectiveDisplay {
 		title.relocate(300, 20);
 		title.setFont(Main.bigFont);
 		root.getChildren().add(title);
+		
+		// Creates the label for status
+		Label status = new Label("Status: " + Main.externalInteractor.status);
+		status.setMinWidth(400);
+		status.setAlignment(Pos.CENTER);
+		status.setFont(Main.medFont);
+		status.relocate(500, 500);
+		root.getChildren().add(status);
 
 		// All buttons are placed, given their size, and added to the pane
 		exit_button.relocate(650, 20);
@@ -112,7 +120,7 @@ public class PerspectiveDisplay {
 		root.getChildren().add(allUsers);
 
 		ScrollPane allFriends = new ScrollPane();
-		allFriends.setPrefSize(110, 410);
+		allFriends.setPrefSize(110, 400);
 		allFriends.relocate(690, 90);
 
 		VBox friends = new VBox();

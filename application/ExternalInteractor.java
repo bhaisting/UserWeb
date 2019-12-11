@@ -9,6 +9,7 @@ public class ExternalInteractor {
 	private UserNetwork network;
 	private String log = "";
 	private PrintWriter toLog;
+	public String status = "None";
 
 	public ExternalInteractor(UserNetwork net) {
 		network = net;
@@ -80,6 +81,7 @@ public class ExternalInteractor {
 	public void updateLog(String line) {
 		if (line.equals("clear")) {
 			log = "";
+			status = "Cleared";
 			try {
 				toLog = new PrintWriter("log.txt");
 			} catch (Exception e) {
@@ -87,6 +89,7 @@ public class ExternalInteractor {
 			}
 		} else {
 			toLog.println(line);
+			status = line;
 			log += line + "\n";
 		}
 	}

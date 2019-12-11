@@ -168,8 +168,13 @@ public class Main extends Application {
 	}
 
 	public static boolean validateInput(String input) {
-		ArrayList<String> userInput = new ArrayList<String>(Arrays.asList(input.split("")));
-		return validCharList.containsAll(userInput);
+		ArrayList<String> userInput = new ArrayList<String>(
+				Arrays.asList(input.split("")));
+		if (validCharList.containsAll(userInput)) {
+			return true;
+		}
+		externalInteractor.status = "Invalid input";
+		return false;
 	}
 
 	/**
