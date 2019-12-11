@@ -19,6 +19,10 @@ package application;
 
 import java.util.LinkedList;
 
+/**
+ * Data storage class, contains a username and a friendList and some methods to
+ * work with them. Node system to work with linked lists
+ */
 public class UserNode {
 	String username; // name of the User
 	LinkedList<UserNode> friendList; // List of all friends of the user

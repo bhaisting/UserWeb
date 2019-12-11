@@ -47,7 +47,7 @@ public class UserNetwork implements UserNetworkADT {
 				name2 = i;
 			}
 		}
-		if (name1 == null || name2 == null) {
+		if (name1 == null || name2 == null || !name1.getFriendList().contains(name2)) {
 			return false;
 		}
 		name1.removeFriend(name2);
