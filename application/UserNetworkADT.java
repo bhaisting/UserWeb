@@ -20,7 +20,9 @@ package application;
 import java.util.LinkedList;
 
 /**
- * Interface for the
+ * Interface for UserNetwork, contains methods to add users, remove users, add
+ * friends, and remove friends. Also contains methods for getting any individual
+ * of the set and the list of all users itself
  */
 public interface UserNetworkADT {
 
