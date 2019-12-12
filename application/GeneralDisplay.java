@@ -1,3 +1,21 @@
+///////////////////////////////////////////////////////////////////////////////
+// Assignment				 UserWeb
+// Title:            GeneralDisplay.java
+// Semester:         CS400 Fall 2019
+//
+// Author:           Ben Haisting, Kennedy Soehren, Yatharth Bindal, 
+//									 Robert Bourguignon, Luke Vandenheuvel
+// Email:            bhaisting@wisc.edu, ksoehren@wisc.edu, ybindal@wisc.edu, 
+//									 bourguignon@wisc.edu, lvandenheuve@wisc.edu
+// CS Login:         haisting, soehren, yatharth, bourguignon, vandenheuvel
+// Lecturer's Name:  Debra Deppeler
+//
+// Description: GeneralDisplay shows the display from the general perspective,
+//							not focused on any particular user. It allows users to see a
+//							visual of the UserWeb and lets them edit it. Users are also able
+//							to change perspective if they would like to.
+//
+//////////////////////////// 80 columns wide //////////////////////////////////
 package application;
 
 import java.util.LinkedList;
@@ -20,6 +38,10 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * Display for the general perspective. Edits the mainStage to create a visual
+ * interface for the user that they can interact with.
+ */
 public class GeneralDisplay {
 	private UserNetwork network;
 	private Stage mainStage;
@@ -27,6 +49,12 @@ public class GeneralDisplay {
 	private Button data_entry, add_user, add_friend, visualize_network,
 			shortest_path, remove_friend, remove_user, exit_button, clear_network;
 
+	/**
+	 * Constructor, initializes all variables and sets up buttons with text
+	 * 
+	 * @param stage - the mainStage
+	 * @param net   - the network
+	 */
 	public GeneralDisplay(Stage stage, UserNetwork net) {
 		network = net;
 		mainStage = stage;
@@ -54,6 +82,12 @@ public class GeneralDisplay {
 		clear_network.setTextAlignment(TextAlignment.CENTER);
 	}
 
+	/**
+	 * gets the general screen pane with all items that will always be on the
+	 * screen for a general display
+	 * 
+	 * @return pane containing the general screen
+	 */
 	public Pane getGeneralScreen() {
 		Pane root = new Pane();
 		root.setPrefSize(800, 600);
@@ -122,6 +156,8 @@ public class GeneralDisplay {
 		data_entry.setPrefSize(100, 50);
 		root.getChildren().add(data_entry);
 
+		// display the scrollpane of all users with hyperlinks allowing the user to
+		// click to a certain perspective
 		ScrollPane allUsers = new ScrollPane();
 		allUsers.setPrefSize(110, 500);
 		VBox users = new VBox();
@@ -135,7 +171,8 @@ public class GeneralDisplay {
 			Hyperlink link = new Hyperlink(node.getUsername());
 			link.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
-				public void handle(ActionEvent e) {
+				public void handle(ActionEvent e) { // if a hyperlink is clicked, go to
+																						// that perspective display
 					Main.perspective = true;
 					Main.perspectivePerson = network.getUser(node.getUsername());
 					Main.externalInteractor
@@ -152,11 +189,14 @@ public class GeneralDisplay {
 		allUsers.setPannable(true);
 
 		root.getChildren().add(allUsers);
-		buttonHandler(root);
+		buttonHandler();
 		return root;
 	}
 
-	public void buttonHandler(Pane root) {
+	/**
+	 * Handles all cases where buttons are pressed
+	 */
+	public void buttonHandler() {
 		add_user.setOnAction(event -> {
 			get1ArgPane("Input the name of the new user, then press enter", 0);
 		});
@@ -198,6 +238,13 @@ public class GeneralDisplay {
 		});
 	}
 
+	/**
+	 * Opens up a popup window with one textfield, then handles what to do with
+	 * the input given the commandType
+	 * 
+	 * @param labelText   - Text to be displayed on the title label
+	 * @param commandType - Different based on what button was pressed
+	 */
 	private void get1ArgPane(String labelText, int commandType) {
 		popupStage = new Stage();
 		Pane root = new Pane();
@@ -219,19 +266,18 @@ public class GeneralDisplay {
 		button.setOnAction(event -> {
 			switch (commandType) {
 			case 0: // Add user case
-				if (Main.validateInput(textBox.getText())) {
+				if (Main.validateInput(textBox.getText())) { // check input
 					network.createUser(textBox.getText());
 					Main.externalInteractor.updateLog("a " + textBox.getText());
 				}
-				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-						Main.WINDOW_HEIGHT));
+				createVisual();
 				break;
 			case 1: // Remove user case
-				if (network.deleteUser(textBox.getText())) {
+				if (network.deleteUser(textBox.getText())) { // check that user was
+																											// actually deleted
 					Main.externalInteractor.updateLog("r " + textBox.getText());
 				}
-				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-						Main.WINDOW_HEIGHT));
+				createVisual();
 				break;
 			case 2: // Data entry case
 				// if the command to change perspectives is given, change perspectives
@@ -240,8 +286,7 @@ public class GeneralDisplay {
 							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
 									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				} else {
-					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-							Main.WINDOW_HEIGHT));
+					createVisual();
 				}
 				break;
 			}
@@ -255,6 +300,13 @@ public class GeneralDisplay {
 		popupStage.show();
 	}
 
+	/**
+	 * Opens up a popup window with two textfields, then handles what to do with
+	 * the inputs given the commandType
+	 * 
+	 * @param labelText   - Text to be displayed on the title label
+	 * @param commandType - Different based on what button was pressed
+	 */
 	private void get2ArgPane(String labelText, int commandType) {
 		popupStage = new Stage();
 		Pane root = new Pane();
@@ -267,7 +319,7 @@ public class GeneralDisplay {
 		label.setTextAlignment(TextAlignment.CENTER);
 
 		TextField textBox1 = new TextField();
-		textBox1.relocate(25, 60);
+		textBox1.relocate(25, 70);
 		textBox1.setPrefWidth(150);
 
 		TextField textBox2 = new TextField();
@@ -281,40 +333,40 @@ public class GeneralDisplay {
 			switch (commandType) {
 			case 0: // Add friend case
 				if (Main.validateInput(textBox1.getText())
-						&& Main.validateInput(textBox2.getText())) {
+						&& Main.validateInput(textBox2.getText())) { // check for bad input
 					network.setFriend(textBox1.getText(), textBox2.getText());
 					Main.externalInteractor
 							.updateLog("a " + textBox1.getText() + " " + textBox2.getText());
 				}
-				mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-						Main.WINDOW_HEIGHT));
+				createVisual();
 				break;
 			case 1: // Shortest path case
 				if (Main.validateInput(textBox1.getText())
-						&& Main.validateInput(textBox2.getText())) {
+						&& Main.validateInput(textBox2.getText())) { // check for bad input
 					LinkedList<UserNode> shortestPath = network
 							.shortestPath(textBox1.getText(), textBox2.getText());
 					Pane pane = getGeneralScreen();
 
+					// displays result of the shortestPath method
 					Label shortest = new Label();
 					shortest.setMinWidth(400);
 					shortest.relocate(220, 100);
 					shortest.setAlignment(Pos.CENTER);
 					shortest.setFont(Main.bigFont);
-					if (shortestPath == null) {
+					if (shortestPath == null) { // one or both names don't exist
 						shortest
 								.setText("One or both of the names don't exist in the network");
 						shortest.relocate(180, 100);
-					} else if (shortestPath.size() == 0) {
+					} else if (shortestPath.size() == 0) { // the users aren't connected
 						shortest.setText("No path found");
-					} else {
+					} else { // path found
 						shortest.setText("Shortest path:");
 						String s = "";
 						for (int i = 0; i < shortestPath.size() - 1; i++) {
 							s += shortestPath.get(i).getUsername() + " -> ";
 						}
 						s += shortestPath.get(shortestPath.size() - 1).getUsername();
-						Label textList = new Label(s);
+						Label textList = new Label(s); // displays path with "->" delimiters
 						textList.setMaxWidth(400);
 						textList.setWrapText(true);
 						textList.setTextAlignment(TextAlignment.CENTER);
@@ -326,7 +378,7 @@ public class GeneralDisplay {
 					pane.getChildren().add(shortest);
 					mainStage
 							.setScene(new Scene(pane, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
-				} else {
+				} else { // bad input found, do nothing
 					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
 							Main.WINDOW_HEIGHT));
 				}
@@ -335,8 +387,7 @@ public class GeneralDisplay {
 				if (network.deleteFriend(textBox1.getText(), textBox2.getText())) {
 					Main.externalInteractor
 							.updateLog("r " + textBox1.getText() + " " + textBox2.getText());
-					mainStage.setScene(new Scene(getGeneralScreen(), Main.WINDOW_WIDTH,
-							Main.WINDOW_HEIGHT));
+					createVisual();
 				}
 				break;
 			}
@@ -363,19 +414,23 @@ public class GeneralDisplay {
 		LinkedList<Hyperlink> labels = new LinkedList<Hyperlink>();
 		for (int i = 0; i < net.size(); i++) {
 			UserNode user = net.get(i);
+			// calculates position in the oval for each node
 			double frac = (double) i / net.size();
 			int xpos = (int) (450 + 300 * Math.cos(frac * 2 * Math.PI));
 			int ypos = (int) (290 + 200 * Math.sin(frac * 2 * Math.PI));
+
 			Circle circle = new Circle(xpos, ypos, 25);
 			circle.setFill(Color.CYAN);
 			circles.add(circle);
+
+			// puts names in the circles, and hyperlinks them
 			Hyperlink label = new Hyperlink(user.getUsername());
 			label.setMinWidth(50);
 			label.relocate(xpos - 25, ypos - 10);
 			label.setAlignment(Pos.CENTER);
 			label.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
-				public void handle(ActionEvent e) {
+				public void handle(ActionEvent e) { // change the perspective
 					Main.perspective = true;
 					Main.perspectivePerson = user;
 					Main.externalInteractor
@@ -386,6 +441,8 @@ public class GeneralDisplay {
 				}
 			});
 			labels.add(label);
+			
+			// adds line segment between friends
 			for (int j = i + 1; j < net.size(); j++) {
 				UserNode friend = net.get(j);
 				if (user.getFriendList().contains(friend)) {

@@ -1,3 +1,21 @@
+///////////////////////////////////////////////////////////////////////////////
+// Assignment				 UserWeb
+// Title:            GeneralDisplay.java
+// Semester:         CS400 Fall 2019
+//
+// Author:           Ben Haisting, Kennedy Soehren, Yatharth Bindal, 
+//									 Robert Bourguignon, Luke Vandenheuvel
+// Email:            bhaisting@wisc.edu, ksoehren@wisc.edu, ybindal@wisc.edu, 
+//									 bourguignon@wisc.edu, lvandenheuve@wisc.edu
+// CS Login:         haisting, soehren, yatharth, bourguignon, vandenheuvel
+// Lecturer's Name:  Debra Deppeler
+//
+// Description: PerspectiveDisplay shows the display from a focused perspective
+//							of one of the users in the UserWeb. It allows users to add 
+//							friends and remove friends for that user, check mutual friends,
+//							and other functions.
+//
+//////////////////////////// 80 columns wide //////////////////////////////////
 package application;
 
 import java.util.LinkedList;
@@ -18,12 +36,23 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * Display for the focused perspective. Edits the mainStage to create an
+ * interactable user interface
+ */
 public class PerspectiveDisplay {
 	private UserNetwork network;
 	private Stage mainStage;
 	private Stage popupStage;
-	private Button add_user, add_friend, mutual_friends, remove_friend, remove_self, back_to_general, exit_button;
+	private Button add_user, add_friend, mutual_friends, remove_friend,
+			remove_self, back_to_general, exit_button;
 
+	/**
+	 * Constructor, initializes all variables and sets up buttons with text
+	 * 
+	 * @param stage - the mainStage
+	 * @param net   - the network
+	 */
 	public PerspectiveDisplay(Stage stage, UserNetwork net) {
 		network = net;
 		mainStage = stage;
@@ -44,16 +73,23 @@ public class PerspectiveDisplay {
 		exit_button = new Button("Exit");
 	}
 
+	/**
+	 * gets the perspective screen pane with all items that will always be on the
+	 * screen for a perspective display
+	 * 
+	 * @return pane containing the perspective screen
+	 */
 	public Pane getPerspectiveScreen() {
 		Pane root = new Pane();
 		root.setPrefSize(800, 600);
 
 		// Creates the title label
-		Label title = new Label(Main.perspectivePerson.getUsername() + "'s Perspective");
+		Label title = new Label(
+				Main.perspectivePerson.getUsername() + "'s Perspective");
 		title.relocate(300, 20);
 		title.setFont(Main.bigFont);
 		root.getChildren().add(title);
-		
+
 		// Creates the label for status
 		Label status = new Label("Status: " + Main.externalInteractor.status);
 		status.setMinWidth(400);
@@ -91,6 +127,8 @@ public class PerspectiveDisplay {
 		back_to_general.setPrefSize(100, 50);
 		root.getChildren().add(back_to_general);
 
+		// display the scrollpane of all users with hyperlinks allowing the user to
+		// click to a certain perspective
 		ScrollPane allUsers = new ScrollPane();
 		allUsers.setPrefSize(110, 500);
 		VBox users = new VBox();
@@ -104,12 +142,14 @@ public class PerspectiveDisplay {
 			Hyperlink link = new Hyperlink(node.getUsername());
 			link.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
-				public void handle(ActionEvent e) {
+				public void handle(ActionEvent e) { // if clicked, change perspectives
 					Main.perspective = true;
 					Main.perspectivePerson = network.getUser(node.getUsername());
-					Main.externalInteractor.updateLog("s " + Main.perspectivePerson.getUsername());
-					mainStage.setScene(new Scene(Main.perspectiveDisplay.getPerspectiveScreen(), Main.WINDOW_WIDTH,
-							Main.WINDOW_HEIGHT));
+					Main.externalInteractor
+							.updateLog("s " + Main.perspectivePerson.getUsername());
+					mainStage.setScene(
+							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
+									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				}
 			});
 			users.getChildren().add(link);
@@ -119,27 +159,31 @@ public class PerspectiveDisplay {
 		allUsers.setPannable(true);
 		root.getChildren().add(allUsers);
 
+		// display the scrollpane of all friends with hyperlinks allowing the user
+		// to click to a certain perspective
 		ScrollPane allFriends = new ScrollPane();
 		allFriends.setPrefSize(110, 400);
 		allFriends.relocate(690, 90);
-
 		VBox friends = new VBox();
 		Label friendLabel = new Label("Friends");
 		friendLabel.setFont(Main.medFont);
 		friends.getChildren().add(friendLabel);
-		Label numFriends = new Label("Count: " + Main.perspectivePerson.getFriendList().size());
+		Label numFriends = new Label(
+				"Count: " + Main.perspectivePerson.getFriendList().size());
 		numFriends.setFont(Main.medFont);
 		friends.getChildren().add(numFriends);
 		for (UserNode node : Main.perspectivePerson.getFriendList()) {
 			Hyperlink link = new Hyperlink(node.getUsername());
 			link.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
-				public void handle(ActionEvent e) {
+				public void handle(ActionEvent e) { // if clicked, change perspectives
 					Main.perspective = true;
 					Main.perspectivePerson = network.getUser(node.getUsername());
-					Main.externalInteractor.updateLog("s " + Main.perspectivePerson.getUsername());
-					mainStage.setScene(new Scene(Main.perspectiveDisplay.getPerspectiveScreen(), Main.WINDOW_WIDTH,
-							Main.WINDOW_HEIGHT));
+					Main.externalInteractor
+							.updateLog("s " + Main.perspectivePerson.getUsername());
+					mainStage.setScene(
+							new Scene(Main.perspectiveDisplay.getPerspectiveScreen(),
+									Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				}
 			});
 			friends.getChildren().add(link);
@@ -149,15 +193,14 @@ public class PerspectiveDisplay {
 		allFriends.setPannable(true);
 
 		root.getChildren().add(allFriends);
-		buttonHandler(root);
+		buttonHandler();
 		return root;
 	}
 
 	/**
-	 * 
-	 * @param root
+	 * Handles all cases where buttons are pressed
 	 */
-	public void buttonHandler(Pane root) {
+	public void buttonHandler() {
 		add_user.setOnAction(event -> {
 			get1ArgPane("Input the name of the new user, then press enter", 0);
 		});
@@ -174,30 +217,37 @@ public class PerspectiveDisplay {
 			get1ArgPane("Input the name of your (now) enemy, then press enter", 3);
 		});
 
-		remove_self.setOnAction(event -> {// TROUBLESHOOT THIS, IT WORKS BUT I DON'T
-											// KNOW WHY
-			try {
+		remove_self.setOnAction(event -> {
+			try { // throws an error, but fixes itself if the error is just caught
 				network.deleteUser(Main.perspectivePerson.getUsername());
 			} catch (Exception e) {
 			}
 			Main.perspective = false;
-			mainStage
-					.setScene(new Scene(Main.generalDisplay.getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+			mainStage.setScene(new Scene(Main.generalDisplay.getGeneralScreen(),
+					Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 
 		});
 
-		back_to_general.setOnAction(event -> {
+		back_to_general.setOnAction(event -> { // switches to general perspective
 			Main.perspective = false;
-			mainStage
-					.setScene(new Scene(Main.generalDisplay.getGeneralScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+			mainStage.setScene(new Scene(Main.generalDisplay.getGeneralScreen(),
+					Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 		});
 
 		exit_button.setOnAction(event -> {
-			Main.externalInteractor.updateLog("r " + Main.perspectivePerson.getUsername());
+			Main.externalInteractor
+					.updateLog("r " + Main.perspectivePerson.getUsername());
 			Main.exit();
 		});
 	}
 
+	/**
+	 * Opens up a popup window with one textfield, then handles what to do with
+	 * the input given the commandType
+	 * 
+	 * @param labelText   - Text to be displayed on the title label
+	 * @param commandType - Different based on what button was pressed
+	 */
 	private void get1ArgPane(String labelText, int commandType) {
 		popupStage = new Stage();
 		Pane root = new Pane();
@@ -220,55 +270,67 @@ public class PerspectiveDisplay {
 			switch (commandType) {
 
 			case 0: // Add user case
-				if (Main.validateInput(textBox.getText())) {
+				if (Main.validateInput(textBox.getText())) { // check input
 					network.createUser(textBox.getText());
 					Main.externalInteractor.updateLog("a " + textBox.getText());
-					mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+					mainStage.setScene(new Scene(getPerspectiveScreen(),
+							Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				}
 				break;
 
 			case 1: // Add friend case
-				if (Main.validateInput(textBox.getText())) {
-					network.setFriend(Main.perspectivePerson.getUsername(), textBox.getText());
-					Main.externalInteractor
-							.updateLog("a " + Main.perspectivePerson.getUsername() + " " + textBox.getText());
-					mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				if (Main.validateInput(textBox.getText())) { // check input
+					network.setFriend(Main.perspectivePerson.getUsername(),
+							textBox.getText());
+					Main.externalInteractor.updateLog("a "
+							+ Main.perspectivePerson.getUsername() + " " + textBox.getText());
+					mainStage.setScene(new Scene(getPerspectiveScreen(),
+							Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				}
 				break;
 
 			case 2: // Mutual friend case
-				Pane mainRoot = getPerspectiveScreen();
-				LinkedList<UserNode> list = network.getMutualFriends(Main.perspectivePerson, textBox.getText());
-				Label text = new Label();
-				text.setAlignment(Pos.CENTER);
-				text.setMinWidth(200);
-				text.setFont(Main.medFont);
-				text.setStyle("-fx-font-weight: bold");
-				mainRoot.getChildren().add(text);
+				if (Main.validateInput(textBox.getText())) { // check input
+					Pane mainRoot = getPerspectiveScreen();
+					LinkedList<UserNode> list = network
+							.getMutualFriends(Main.perspectivePerson, textBox.getText());
+					Label text = new Label();
+					text.setAlignment(Pos.CENTER);
+					text.setMinWidth(200);
+					text.setFont(Main.medFont);
+					text.setStyle("-fx-font-weight: bold");
+					mainRoot.getChildren().add(text);
 
-				if (list == null) { // Name not found case
-					text.setText("The name you entered does not exist in the network");
-					text.relocate(210, 150);
-				} else if (list.size() == 0) { // No mutual friends case
-					text.setText("No mutual friends found");
-					text.relocate(300, 150);
-				} else { // Mutual friends found case
-					String s = "";
-					for (UserNode i : list) {
-						s += i.getUsername() + "\n";
+					if (list == null) { // Name not found case
+						text.setText("The name you entered does not exist in the network");
+						text.relocate(210, 150);
+					} else if (list.size() == 0) { // No mutual friends case
+						text.setText("No mutual friends found");
+						text.relocate(300, 150);
+					} else { // Mutual friends found case
+						String s = "";
+						for (UserNode i : list) {
+							s += i.getUsername() + "\n";
+						}
+						text.setText("Mutual friends found:\n" + s);
+						text.relocate(290, 150);
 					}
-					text.setText("Mutual friends found:\n" + s);
-					text.relocate(290, 150);
+					mainStage.setScene(
+							new Scene(mainRoot, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				} else {
+					mainStage.setScene(new Scene(getPerspectiveScreen(),
+							Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				}
-				mainStage.setScene(new Scene(mainRoot, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
 				break;
 
 			case 3: // Remove friend case
-				if (network.deleteFriend(Main.perspectivePerson.getUsername(), textBox.getText())) {
-					Main.externalInteractor
-							.updateLog("r " + Main.perspectivePerson.getUsername() + " " + textBox.getText());
+				if (network.deleteFriend(Main.perspectivePerson.getUsername(),
+						textBox.getText())) { // if friend is actually removed
+					Main.externalInteractor.updateLog("r "
+							+ Main.perspectivePerson.getUsername() + " " + textBox.getText());
 				}
-				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT));
+				mainStage.setScene(new Scene(getPerspectiveScreen(), Main.WINDOW_WIDTH,
+						Main.WINDOW_HEIGHT));
 				break;
 			}
 			popupStage.close();
